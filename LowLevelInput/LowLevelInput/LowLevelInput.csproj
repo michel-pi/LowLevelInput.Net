@@ -45,7 +45,10 @@
   <ItemGroup>
     <Compile Include="Converters\KeyCodeConverter.cs" />
     <Compile Include="Converters\KeyStateConverter.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="Hooks\KeyState.cs" />
+    <Compile Include="Hooks\LowLevelKeyboardHook.cs" />
+    <Compile Include="Hooks\LowLevelMouseHook.cs" />
     <Compile Include="Hooks\VirtualKeyCode.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="PInvoke\Libraries\Kernel32.cs" />
