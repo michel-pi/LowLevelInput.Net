@@ -43,6 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\KeyCodeConverter.cs" />
+    <Compile Include="Converters\KeyStateConverter.cs" />
+    <Compile Include="Hooks\KeyState.cs" />
+    <Compile Include="Hooks\VirtualKeyCode.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="PInvoke\Libraries\Kernel32.cs" />
     <Compile Include="PInvoke\Types\Message.cs" />
@@ -52,8 +56,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Converters\" />
-    <Folder Include="Hooks\" />
     <Folder Include="Utilities\" />
     <Folder Include="WindowsHooks\" />
   </ItemGroup>
