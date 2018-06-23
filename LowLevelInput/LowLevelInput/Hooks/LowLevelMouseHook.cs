@@ -8,6 +8,7 @@ using LowLevelInput.WindowsHooks;
 namespace LowLevelInput.Hooks
 {
     /// <summary>
+    /// Manage a LowLevelMouseHook
     /// </summary>
     /// <seealso cref="System.IDisposable"/>
     public class LowLevelMouseHook : IDisposable
