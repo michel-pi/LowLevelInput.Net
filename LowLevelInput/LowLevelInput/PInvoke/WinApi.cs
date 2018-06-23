@@ -17,6 +17,11 @@ namespace LowLevelInput.PInvoke
         [DllImport("kernel32.dll", EntryPoint = "GetModuleHandleW", SetLastError = false, CharSet = CharSet.Unicode)]
         private static extern IntPtr InternalGetModuleHandleW(string modulename);
 
+        public static void ThrowWin32Exception(string message)
+        {
+            throw new Win32Exception(Marshal.GetLastWin32Error(), message + Environment.NewLine + "HResult: " + Marshal.GetHRForLastWin32Error());
+        }
+
         public static IntPtr GetProcAddress(string modulename, string procname)
         {
             IntPtr hModule = InternalGetModuleHandleW(modulename);
@@ -45,11 +50,6 @@ namespace LowLevelInput.PInvoke
         private static Type ObfuscatorNeedsThis<T>()
         {
             return typeof(T);
-        }
-
-        private static void ThrowWin32Exception(string message)
-        {
-            throw new Win32Exception(Marshal.GetLastWin32Error(), message + Environment.NewLine + "HResult: " + Marshal.GetHRForLastWin32Error());
         }
     }
 }
