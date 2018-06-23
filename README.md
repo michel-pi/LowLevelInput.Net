@@ -24,10 +24,14 @@ You can easily monitor mouse and keyboard events and register callbacks for spec
 
 Help me to provide a better xml documentation or suggest features and report bugs
 
+### Example
+
+See: Example project
+
 ### License
 
 - [LowLevelInput.Net License](https://github.com/michel-pi/LowLevelInput.Net/blob/master/LICENSE "LowLevelInput.Net License")
 
-### Example
+# Contributions and Credits
 
-See: Example project
+- [LeagueRaINi for the WasPressed implementation](https://github.com/LeagueRaINi "LeagueRaINi for the WasPressed implementation")
