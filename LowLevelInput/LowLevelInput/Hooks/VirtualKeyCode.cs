@@ -3,6 +3,7 @@
 namespace LowLevelInput.Hooks
 {
     /// <summary>
+    /// An enumeration of all VirtualKeyCodes on Windows
     /// </summary>
     public enum VirtualKeyCode : int
     {
