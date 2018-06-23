@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Runtime.InteropServices;
 
+using LowLevelInput.PInvoke;
 using LowLevelInput.PInvoke.Types;
 using LowLevelInput.PInvoke.Libraries;
 
@@ -84,6 +85,8 @@ namespace LowLevelInput.WindowsHooks
 
                 hookHandle = User32.SetWindowsHookEx((int)WindowsHookType, methodPtr, MainModuleHandle, 0);
             }
+
+            if (hookHandle == IntPtr.Zero) WinApi.ThrowWin32Exception("Failed to \"SetWindowsHookEx\" with " + WindowsHookType);
 
             Message msg = new Message();
 

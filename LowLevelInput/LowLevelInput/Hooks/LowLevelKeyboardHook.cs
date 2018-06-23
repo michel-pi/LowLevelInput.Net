@@ -3,6 +3,7 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
+using LowLevelInput.PInvoke;
 using LowLevelInput.PInvoke.Types;
 using LowLevelInput.WindowsHooks;
 
@@ -142,7 +143,10 @@ namespace LowLevelInput.Hooks
 
             _hook.OnHookCalled += Hook_OnHookCalled;
 
-            _hook.InstallHook();
+            if(!_hook.InstallHook())
+            {
+                WinApi.ThrowWin32Exception("Unknown error while installing hook.");
+            }
 
             Global.OnProcessExit += Global_OnProcessExit;
             Global.OnUnhandledException += Global_OnUnhandledException;
