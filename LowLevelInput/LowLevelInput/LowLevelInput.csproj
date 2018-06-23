@@ -60,8 +60,6 @@
     <Compile Include="WindowsHooks\WindowsHook.cs" />
     <Compile Include="WindowsHooks\WindowsHookType.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilities\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
