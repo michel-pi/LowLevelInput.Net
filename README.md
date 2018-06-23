@@ -30,4 +30,4 @@ Help me to provide a better xml documentation or suggest features and report bug
 
 ### Example
 
-View the LowLevelExample project
+See: Example project
