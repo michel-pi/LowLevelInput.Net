@@ -9,6 +9,7 @@ using LowLevelInput.PInvoke.Libraries;
 namespace LowLevelInput.WindowsHooks
 {
     /// <summary>
+    /// An generic class to install WindowsHooks
     /// </summary>
     /// <seealso cref="System.IDisposable"/>
     public class WindowsHook : IDisposable
