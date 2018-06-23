@@ -5,6 +5,7 @@ using LowLevelInput.Hooks;
 namespace LowLevelInput.Converters
 {
     /// <summary>
+    /// Provides converter methods for KeyStateConverter
     /// </summary>
     public static class KeyStateConverter
     {
@@ -17,7 +18,7 @@ namespace LowLevelInput.Converters
         };
 
         /// <summary>
-        /// To the state of the key.
+        /// Converts a <c>string</c> to it's corresponding <c>KeyState</c>
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
@@ -37,7 +38,7 @@ namespace LowLevelInput.Converters
         }
 
         /// <summary>
-        /// To the state of the key.
+        /// Converts an <c>int</c> to it's corresponding <c>KeyState</c>
         /// </summary>
         /// <param name="state">The state.</param>
         /// <returns></returns>
@@ -50,10 +51,10 @@ namespace LowLevelInput.Converters
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Returns a <see cref="System.String"/> that represents a <c>KeyState</c>.
         /// </summary>
         /// <param name="state">The state.</param>
-        /// <returns>A <see cref="System.String"/> that represents this instance.</returns>
+        /// <returns>A <see cref="System.String"/> that represents a <c>KeyState</c>.</returns>
         public static string ToString(KeyState state)
         {
             int index = (int)state;
