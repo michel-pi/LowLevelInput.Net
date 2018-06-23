@@ -17,15 +17,15 @@ namespace LowLevelInput.WindowsHooks
     {
         private static IntPtr MainModuleHandle = Process.GetCurrentProcess().MainModule.BaseAddress;
 
-        private IntPtr hookHandle;
-        private User32.HookProc hookProc;
-        private Thread hookThread;
-        private uint hookThreadId;
-        private object lockObject;
+        private IntPtr _hookHandler;
+        private User32.HookProc _hookProc;
+        private Thread _hookThread;
+        private uint _hookThreadId;
+        private object _lockObject;
 
         private WindowsHook()
         {
-            lockObject = new object();
+            _lockObject = new object();
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace LowLevelInput.WindowsHooks
         /// <param name="windowsHookType">Type of the windows hook.</param>
         public WindowsHook(WindowsHookType windowsHookType)
         {
-            lockObject = new object();
+            _lockObject = new object();
             WindowsHookType = windowsHookType;
         }
 
@@ -50,12 +50,12 @@ namespace LowLevelInput.WindowsHooks
         /// </summary>
         /// <param name="wParam">The w parameter.</param>
         /// <param name="lParam">The l parameter.</param>
-        public delegate void HookCallback(IntPtr wParam, IntPtr lParam);
+        public delegate void HookCalledEventHandler(IntPtr wParam, IntPtr lParam);
 
         /// <summary>
         /// Occurs when [on hook called].
         /// </summary>
-        public event HookCallback OnHookCalled;
+        public event HookCalledEventHandler OnHookCalled;
 
         /// <summary>
         /// Gets the type of the windows hook.
@@ -70,23 +70,23 @@ namespace LowLevelInput.WindowsHooks
                 OnHookCalled?.Invoke(wParam, lParam);
             }
 
-            return User32.CallNextHookEx(hookHandle, nCode, wParam, lParam);
+            return User32.CallNextHookEx(_hookHandler, nCode, wParam, lParam);
         }
 
         private void InitializeHookThread()
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
-                hookThreadId = Kernel32.GetCurrentThreadId();
+                _hookThreadId = Kernel32.GetCurrentThreadId();
 
-                hookProc = new User32.HookProc(HookProcedure);
+                _hookProc = new User32.HookProc(HookProcedure);
 
-                IntPtr methodPtr = Marshal.GetFunctionPointerForDelegate(hookProc);
+                IntPtr methodPtr = Marshal.GetFunctionPointerForDelegate(_hookProc);
 
-                hookHandle = User32.SetWindowsHookEx((int)WindowsHookType, methodPtr, MainModuleHandle, 0);
+                _hookHandler = User32.SetWindowsHookEx((int)WindowsHookType, methodPtr, MainModuleHandle, 0);
             }
 
-            if (hookHandle == IntPtr.Zero) WinApi.ThrowWin32Exception("Failed to \"SetWindowsHookEx\" with " + WindowsHookType);
+            if (_hookHandler == IntPtr.Zero) WinApi.ThrowWin32Exception("Failed to \"SetWindowsHookEx\" with " + WindowsHookType);
 
             Message msg = new Message();
 
@@ -95,7 +95,7 @@ namespace LowLevelInput.WindowsHooks
                 if (msg.Msg == (uint)WindowsMessage.WM_QUIT) break;
             }
 
-            User32.UnhookWindowsHookEx(hookHandle);
+            User32.UnhookWindowsHookEx(_hookHandler);
         }
 
         /// <summary>
@@ -104,17 +104,17 @@ namespace LowLevelInput.WindowsHooks
         /// <returns></returns>
         public bool InstallHook()
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
-                if (hookHandle != IntPtr.Zero) return false;
-                if (hookThreadId != 0) return false;
+                if (_hookHandler != IntPtr.Zero) return false;
+                if (_hookThreadId != 0) return false;
 
-                hookThread = new Thread(InitializeHookThread)
+                _hookThread = new Thread(InitializeHookThread)
                 {
                     IsBackground = true
                 };
 
-                hookThread.Start();
+                _hookThread.Start();
 
                 return true;
             }
@@ -126,25 +126,25 @@ namespace LowLevelInput.WindowsHooks
         /// <returns></returns>
         public bool UninstallHook()
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
-                if (hookHandle == IntPtr.Zero) return false;
-                if (hookThreadId == 0) return false;
+                if (_hookHandler == IntPtr.Zero) return false;
+                if (_hookThreadId == 0) return false;
 
-                if (User32.PostThreadMessage(hookThreadId, (uint)WindowsMessage.WM_QUIT, IntPtr.Zero, IntPtr.Zero) != 0)
+                if (User32.PostThreadMessage(_hookThreadId, (uint)WindowsMessage.WM_QUIT, IntPtr.Zero, IntPtr.Zero) != 0)
                 {
                     try
                     {
-                        hookThread.Join();
+                        _hookThread.Join();
                     }
                     catch
                     {
                     }
                 }
 
-                hookHandle = IntPtr.Zero;
-                hookThreadId = 0;
-                hookThread = null;
+                _hookHandler = IntPtr.Zero;
+                _hookThreadId = 0;
+                _hookThread = null;
 
                 return true;
             }
