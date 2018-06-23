@@ -44,7 +44,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Library.cs" />
+    <Compile Include="PInvoke\Libraries\Kernel32.cs" />
+    <Compile Include="PInvoke\Types\Message.cs" />
+    <Compile Include="PInvoke\Types\WindowsMessage.cs" />
+    <Compile Include="PInvoke\Libraries\User32.cs" />
+    <Compile Include="PInvoke\WinApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Converters\" />
+    <Folder Include="Hooks\" />
+    <Folder Include="Utilities\" />
+    <Folder Include="WindowsHooks\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
