@@ -6,7 +6,7 @@ using LowLevelInput.Hooks;
 namespace LowLevelInput.Converters
 {
     /// <summary>
-    /// Provides converter methods for VirtualKeyCOdes
+    /// Provides converter methods for VirtualKeyCodes
     /// </summary>
     public static class KeyCodeConverter
     {
