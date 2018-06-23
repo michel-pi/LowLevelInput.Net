@@ -13,15 +13,32 @@ namespace LowLevelInput.Hooks
     /// <seealso cref="System.IDisposable"/>
     public class LowLevelKeyboardHook : IDisposable
     {
-        private WindowsHook hook;
-        private object lockObject;
+        private WindowsHook _hook;
+        private object _lockObject;
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether [clear injected flag].
+        /// </summary>
+        /// <value><c>true</c> if [clear injected flag]; otherwise, <c>false</c>.</value>
+        public bool ClearInjectedFlag { get; set; }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <param name="key">The key.</param>
+        public delegate void KeyboardEventHandler(VirtualKeyCode key, KeyState state);
+
+        /// <summary>
+        /// Occurs when [on keyboard event].
+        /// </summary>
+        public event KeyboardEventHandler OnKeyboardEvent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LowLevelKeyboardHook"/> class.
         /// </summary>
         public LowLevelKeyboardHook()
         {
-            lockObject = new object();
+            _lockObject = new object();
         }
 
         /// <summary>
@@ -30,7 +47,7 @@ namespace LowLevelInput.Hooks
         /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
         public LowLevelKeyboardHook(bool clearInjectedFlag)
         {
-            lockObject = new object();
+            _lockObject = new object();
             ClearInjectedFlag = clearInjectedFlag;
         }
 
@@ -41,23 +58,6 @@ namespace LowLevelInput.Hooks
         {
             Dispose(false);
         }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="state">The state.</param>
-        /// <param name="key">The key.</param>
-        public delegate void KeyboardEventCallback(KeyState state, VirtualKeyCode key);
-
-        /// <summary>
-        /// Occurs when [on keyboard event].
-        /// </summary>
-        public event KeyboardEventCallback OnKeyboardEvent;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [clear injected flag].
-        /// </summary>
-        /// <value><c>true</c> if [clear injected flag]; otherwise, <c>false</c>.</value>
-        public bool ClearInjectedFlag { get; set; }
 
         private void Global_OnProcessExit()
         {
@@ -122,7 +122,7 @@ namespace LowLevelInput.Hooks
         {
             Task.Factory.StartNew(() =>
             {
-                OnKeyboardEvent?.Invoke(state, key);
+                OnKeyboardEvent?.Invoke(key, state);
             });
         }
 
@@ -132,16 +132,16 @@ namespace LowLevelInput.Hooks
         /// <returns></returns>
         public bool InstallHook()
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
-                if (hook != null) return false;
+                if (_hook != null) return false;
 
-                hook = new WindowsHook(WindowsHookType.LowLevelKeyboard);
+                _hook = new WindowsHook(WindowsHookType.LowLevelKeyboard);
             }
 
-            hook.OnHookCalled += Hook_OnHookCalled;
+            _hook.OnHookCalled += Hook_OnHookCalled;
 
-            hook.InstallHook();
+            _hook.InstallHook();
 
             Global.OnProcessExit += Global_OnProcessExit;
             Global.OnUnhandledException += Global_OnUnhandledException;
@@ -155,20 +155,20 @@ namespace LowLevelInput.Hooks
         /// <returns></returns>
         public bool UninstallHook()
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
-                if (hook == null) return false;
+                if (_hook == null) return false;
 
                 Global.OnProcessExit -= Global_OnProcessExit;
                 Global.OnUnhandledException -= Global_OnUnhandledException;
 
-                hook.OnHookCalled -= Hook_OnHookCalled;
+                _hook.OnHookCalled -= Hook_OnHookCalled;
 
-                hook.UninstallHook();
+                _hook.UninstallHook();
 
-                hook.Dispose();
+                _hook.Dispose();
 
-                hook = null;
+                _hook = null;
 
                 return true;
             }
