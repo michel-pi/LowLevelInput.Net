@@ -8,6 +8,10 @@ using LowLevelInput.Hooks;
 
 namespace LowLevelInput
 {
+    /// <summary>
+    /// Provides methods to manage keyboard and mouse hooks
+    /// </summary>
+    /// <seealso cref="System.IDisposable" />
     public class InputManager : IDisposable
     {
         private object _lockObject;
@@ -18,6 +22,12 @@ namespace LowLevelInput
         private Dictionary<VirtualKeyCode, KeyState> _keyStates;
         private Dictionary<VirtualKeyCode, List<KeyStateChangedEventHandler>> _keyStateChangedCallbacks;
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is initialized.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is initialized; otherwise, <c>false</c>.
+        /// </value>
         public bool IsInitialized { get; private set; }
 
         /// <summary>
@@ -71,16 +81,34 @@ namespace LowLevelInput
             }
         }
 
+        /// <summary>
+        /// A callback for key state changed events
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="state">The state.</param>
         public delegate void KeyStateChangedEventHandler(VirtualKeyCode key, KeyState state);
 
+        /// <summary>
+        /// Occurs when a key on the keyboard changed it's state.
+        /// </summary>
         public event LowLevelKeyboardHook.KeyboardEventHandler OnKeyboardEvent;
+        /// <summary>
+        /// Occurs when a key on the mouse changed it's state.
+        /// </summary>
         public event LowLevelMouseHook.MouseEventHandler OnMouseEvent;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputManager"/> class.
+        /// </summary>
         public InputManager()
         {
             _lockObject = new object();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputManager"/> class and it's hooks.
+        /// </summary>
+        /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
         public InputManager(bool captureMouseMove)
         {
             _lockObject = new object();
@@ -88,6 +116,11 @@ namespace LowLevelInput
             Initialize(captureMouseMove, false);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InputManager"/> class and it's hooks.
+        /// </summary>
+        /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
+        /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
         public InputManager(bool captureMouseMove, bool clearInjectedFlag)
         {
             _lockObject = new object();
@@ -95,16 +128,28 @@ namespace LowLevelInput
             Initialize(captureMouseMove, clearInjectedFlag);
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="InputManager"/> class.
+        /// </summary>
         ~InputManager()
         {
             Dispose(false);
         }
 
+        /// <summary>
+        /// Initializes this instance.
+        /// </summary>
         public void Initialize()
         {
             Initialize(true, false);
         }
 
+        /// <summary>
+        /// Initializes the specified capture mouse move.
+        /// </summary>
+        /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
+        /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " is already initialized.</exception>
         public void Initialize(bool captureMouseMove, bool clearInjectedFlag)
         {
             lock (_lockObject)
@@ -195,6 +240,10 @@ namespace LowLevelInput
             });
         }
 
+        /// <summary>
+        /// Terminates this instance.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " needs to be initialized before it can be terminated.</exception>
         public void Terminate()
         {
             lock (_lockObject)
@@ -223,6 +272,12 @@ namespace LowLevelInput
             }
         }
 
+        /// <summary>
+        /// Gets the state of this key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " needs to be initialized before it can execute this method.</exception>
         public KeyState GetState(VirtualKeyCode key)
         {
             if (!IsInitialized) throw new InvalidOperationException("The " + nameof(InputManager) + " needs to be initialized before it can execute this method.");
@@ -232,6 +287,12 @@ namespace LowLevelInput
             return _keyStates[key];
         }
 
+        /// <summary>
+        /// Sets the internal state of this key.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="state">The state.</param>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " needs to be initialized before it can execute this method.</exception>
         public void SetState(VirtualKeyCode key, KeyState state)
         {
             if (!IsInitialized) throw new InvalidOperationException("The " + nameof(InputManager) + " needs to be initialized before it can execute this method.");
@@ -241,6 +302,14 @@ namespace LowLevelInput
             _keyStates[key] = state;
         }
 
+        /// <summary>
+        /// Determines whether the specified key is pressed.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified key is pressed; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " needs to be initialized before it can execute this method.</exception>
         public bool IsPressed(VirtualKeyCode key)
         {
             if (!IsInitialized) throw new InvalidOperationException("The " + nameof(InputManager) + " needs to be initialized before it can execute this method.");
@@ -250,6 +319,12 @@ namespace LowLevelInput
             return GetState(key) == KeyState.Down;
         }
 
+        /// <summary>
+        /// Determines whether the specified key was pressed.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " needs to be initialized before it can execute this method.</exception>
         public bool WasPressed(VirtualKeyCode key)
         {
             if (!IsInitialized) throw new InvalidOperationException("The " + nameof(InputManager) + " needs to be initialized before it can execute this method.");
@@ -268,6 +343,14 @@ namespace LowLevelInput
             }
         }
 
+        /// <summary>
+        /// Registers an event (callback) for certain keys.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="handler">The handler.</param>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " needs to be initialized before it can execute this method.</exception>
+        /// <exception cref="ArgumentException">VirtualKeyCode.INVALID is not supported by this method. - key</exception>
+        /// <exception cref="ArgumentNullException">handler</exception>
         public void RegisterEvent(VirtualKeyCode key, KeyStateChangedEventHandler handler)
         {
             if (!IsInitialized) throw new InvalidOperationException("The " + nameof(InputManager) + " needs to be initialized before it can execute this method.");
@@ -283,6 +366,15 @@ namespace LowLevelInput
             return;
         }
 
+        /// <summary>
+        /// Unregisters an event (callback) for certain keys.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="handler">The handler.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " needs to be initialized before it can execute this method.</exception>
+        /// <exception cref="ArgumentException">VirtualKeyCode.INVALID is not supported by this method. - key</exception>
+        /// <exception cref="ArgumentNullException">handler</exception>
         public bool UnregisterEvent(VirtualKeyCode key, KeyStateChangedEventHandler handler)
         {
             if (!IsInitialized) throw new InvalidOperationException("The " + nameof(InputManager) + " needs to be initialized before it can execute this method.");
@@ -296,6 +388,15 @@ namespace LowLevelInput
             }
         }
 
+        /// <summary>
+        /// Waits until a given event on a key occurs.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="state">The state. KeyState.None indicates any state</param>
+        /// <param name="timeout">The timeout.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " needs to be initialized before it can execute this method.</exception>
+        /// <exception cref="ArgumentException">VirtualKeyCode.INVALID is not supported by this method. - key</exception>
         public bool WaitForEvent(VirtualKeyCode key, KeyState state = KeyState.None, int timeout = -1)
         {
             if (!IsInitialized) throw new InvalidOperationException("The " + nameof(InputManager) + " needs to be initialized before it can execute this method.");
@@ -342,6 +443,10 @@ namespace LowLevelInput
         #region IDisposable Support
         private bool disposedValue = false;
 
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -364,6 +469,9 @@ namespace LowLevelInput
                 disposedValue = true;
             }
         }
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
