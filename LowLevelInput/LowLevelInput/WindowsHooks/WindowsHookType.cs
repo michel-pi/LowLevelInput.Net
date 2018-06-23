@@ -3,6 +3,7 @@
 namespace LowLevelInput.WindowsHooks
 {
     /// <summary>
+    /// An enumeration of all WindowsHook types
     /// </summary>
     public enum WindowsHookType
     {
