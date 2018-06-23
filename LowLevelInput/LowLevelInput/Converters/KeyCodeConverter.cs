@@ -6,6 +6,7 @@ using LowLevelInput.Hooks;
 namespace LowLevelInput.Converters
 {
     /// <summary>
+    /// Provides converter methods for VirtualKeyCOdes
     /// </summary>
     public static class KeyCodeConverter
     {
@@ -269,7 +270,7 @@ namespace LowLevelInput.Converters
         };
 
         /// <summary>
-        /// Enumerates the virtual key codes.
+        /// Enumerates <c>VirtualKeyCode</c> and it's <c>string</c> representation.
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<KeyValuePair<VirtualKeyCode, string>> EnumerateVirtualKeyCodes()
@@ -284,10 +285,10 @@ namespace LowLevelInput.Converters
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Returns a <see cref="System.String"/> that represents a <c>VirtualKeyCode</c>.
         /// </summary>
         /// <param name="code">The code.</param>
-        /// <returns>A <see cref="System.String"/> that represents this instance.</returns>
+        /// <returns>A <see cref="System.String"/> that represents a <c>VirtualKeyCode</c>.</returns>
         public static string ToString(VirtualKeyCode code)
         {
             int index = (int)code;
@@ -312,7 +313,7 @@ namespace LowLevelInput.Converters
         }
 
         /// <summary>
-        /// To the virtual key code.
+        /// Converts a string to it's corresponding VirtualKeyCode
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
