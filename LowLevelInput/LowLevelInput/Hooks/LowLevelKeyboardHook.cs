@@ -9,6 +9,7 @@ using LowLevelInput.WindowsHooks;
 namespace LowLevelInput.Hooks
 {
     /// <summary>
+    /// Manage a LowLevelKeyboardHook
     /// </summary>
     /// <seealso cref="System.IDisposable"/>
     public class LowLevelKeyboardHook : IDisposable
