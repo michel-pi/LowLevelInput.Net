@@ -12,63 +12,9 @@ namespace LowLevelInput.Hooks
     /// <seealso cref="System.IDisposable"/>
     public class LowLevelMouseHook : IDisposable
     {
-        private WindowsHook hook;
-        private object lockObject;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
-        /// </summary>
-        public LowLevelMouseHook()
-        {
-            lockObject = new object();
-            CaptureMouseMove = false;
-            ClearInjectedFlag = false;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
-        /// </summary>
-        /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
-        public LowLevelMouseHook(bool captureMouseMove)
-        {
-            lockObject = new object();
-            CaptureMouseMove = captureMouseMove;
-            ClearInjectedFlag = false;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
-        /// </summary>
-        /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
-        /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
-        public LowLevelMouseHook(bool captureMouseMove, bool clearInjectedFlag)
-        {
-            lockObject = new object();
-            CaptureMouseMove = captureMouseMove;
-            ClearInjectedFlag = clearInjectedFlag;
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="LowLevelMouseHook"/> class.
-        /// </summary>
-        ~LowLevelMouseHook()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="state">The state.</param>
-        /// <param name="key">The key.</param>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        public delegate void MouseEventCallback(KeyState state, VirtualKeyCode key, int x, int y);
-
-        /// <summary>
-        /// Occurs when [on mouse event].
-        /// </summary>
-        public event MouseEventCallback OnMouseEvent;
-
+        private WindowsHook _hook;
+        private object _lockObject;
+        
         /// <summary>
         /// Gets or sets a value indicating whether [capture mouse move].
         /// </summary>
@@ -110,6 +56,60 @@ namespace LowLevelInput.Hooks
         /// </summary>
         /// <value><c>true</c> if this instance is x button2 pressed; otherwise, <c>false</c>.</value>
         public bool IsXButton2Pressed { get; private set; }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <param name="key">The key.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        public delegate void MouseEventHandler(VirtualKeyCode key, KeyState state, int x, int y);
+
+        /// <summary>
+        /// Occurs when [on mouse event].
+        /// </summary>
+        public event MouseEventHandler OnMouseEvent;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
+        /// </summary>
+        public LowLevelMouseHook()
+        {
+            _lockObject = new object();
+            CaptureMouseMove = false;
+            ClearInjectedFlag = false;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
+        /// </summary>
+        /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
+        public LowLevelMouseHook(bool captureMouseMove)
+        {
+            _lockObject = new object();
+            CaptureMouseMove = captureMouseMove;
+            ClearInjectedFlag = false;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
+        /// </summary>
+        /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
+        /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
+        public LowLevelMouseHook(bool captureMouseMove, bool clearInjectedFlag)
+        {
+            _lockObject = new object();
+            CaptureMouseMove = captureMouseMove;
+            ClearInjectedFlag = clearInjectedFlag;
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="LowLevelMouseHook"/> class.
+        /// </summary>
+        ~LowLevelMouseHook()
+        {
+            Dispose(false);
+        }
 
         private void Global_OnProcessExit()
         {
@@ -289,11 +289,11 @@ namespace LowLevelInput.Hooks
             }
         }
 
-        private void InvokeEventListeners(KeyState state, VirtualKeyCode key, int x, int y)
+        private void InvokeEventListeners(KeyState state, VirtualKeyCode key, int x = 0, int y = 0)
         {
             Task.Factory.StartNew(() =>
             {
-                OnMouseEvent?.Invoke(state, key, x, y);
+                OnMouseEvent?.Invoke(key, state, x, y);
             });
         }
 
@@ -303,16 +303,16 @@ namespace LowLevelInput.Hooks
         /// <returns></returns>
         public bool InstallHook()
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
-                if (hook != null) return false;
+                if (_hook != null) return false;
 
-                hook = new WindowsHook(WindowsHookType.LowLevelMouse);
+                _hook = new WindowsHook(WindowsHookType.LowLevelMouse);
             }
 
-            hook.OnHookCalled += Hook_OnHookCalled;
+            _hook.OnHookCalled += Hook_OnHookCalled;
 
-            hook.InstallHook();
+            _hook.InstallHook();
 
             Global.OnProcessExit += Global_OnProcessExit;
             Global.OnUnhandledException += Global_OnUnhandledException;
@@ -326,20 +326,20 @@ namespace LowLevelInput.Hooks
         /// <returns></returns>
         public bool UninstallHook()
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
-                if (hook == null) return false;
+                if (_hook == null) return false;
 
                 Global.OnProcessExit -= Global_OnProcessExit;
                 Global.OnUnhandledException -= Global_OnUnhandledException;
 
-                hook.OnHookCalled -= Hook_OnHookCalled;
+                _hook.OnHookCalled -= Hook_OnHookCalled;
 
-                hook.UninstallHook();
+                _hook.UninstallHook();
 
-                hook.Dispose();
+                _hook.Dispose();
 
-                hook = null;
+                _hook = null;
 
                 return true;
             }
