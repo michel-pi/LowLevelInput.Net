@@ -73,31 +73,6 @@ namespace LowLevelInput.WindowsHooks
             return User32.CallNextHookEx(_hookHandler, nCode, wParam, lParam);
         }
 
-        private void InitializeHookThread()
-        {
-            lock (_lockObject)
-            {
-                _hookThreadId = Kernel32.GetCurrentThreadId();
-
-                _hookProc = new User32.HookProc(HookProcedure);
-
-                IntPtr methodPtr = Marshal.GetFunctionPointerForDelegate(_hookProc);
-
-                _hookHandler = User32.SetWindowsHookEx((int)WindowsHookType, methodPtr, MainModuleHandle, 0);
-            }
-
-            if (_hookHandler == IntPtr.Zero) WinApi.ThrowWin32Exception("Failed to \"SetWindowsHookEx\" with " + WindowsHookType);
-
-            Message msg = new Message();
-
-            while (User32.GetMessage(ref msg, IntPtr.Zero, 0, 0) != 0)
-            {
-                if (msg.Msg == (uint)WindowsMessage.WM_QUIT) break;
-            }
-
-            User32.UnhookWindowsHookEx(_hookHandler);
-        }
-
         /// <summary>
         /// Installs the hook.
         /// </summary>
@@ -115,9 +90,13 @@ namespace LowLevelInput.WindowsHooks
                 };
 
                 _hookThread.Start();
-
-                return true;
             }
+
+            while (_hookThreadId == 0) Thread.Sleep(10);
+
+            if (_hookHandler == IntPtr.Zero) WinApi.ThrowWin32Exception("Failed to \"SetWindowsHookEx\" with " + WindowsHookType);
+
+            return true;
         }
 
         /// <summary>
@@ -148,6 +127,31 @@ namespace LowLevelInput.WindowsHooks
 
                 return true;
             }
+        }
+
+        private void InitializeHookThread()
+        {
+            lock (_lockObject)
+            {
+                _hookProc = new User32.HookProc(HookProcedure);
+
+                IntPtr methodPtr = Marshal.GetFunctionPointerForDelegate(_hookProc);
+
+                _hookHandler = User32.SetWindowsHookEx((int)WindowsHookType, methodPtr, MainModuleHandle, 0);
+
+                _hookThreadId = Kernel32.GetCurrentThreadId();
+            }
+
+            if (_hookHandler == IntPtr.Zero) return;
+
+            Message msg = new Message();
+
+            while (User32.GetMessage(ref msg, IntPtr.Zero, 0, 0) != 0)
+            {
+                if (msg.Msg == (uint)WindowsMessage.WM_QUIT) break;
+            }
+
+            User32.UnhookWindowsHookEx(_hookHandler);
         }
 
         #region IDisposable Support
