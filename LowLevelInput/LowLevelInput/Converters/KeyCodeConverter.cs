@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using LowLevelInput.Hooks;
 
 namespace LowLevelInput.Converters
 {
     /// <summary>
-    /// Provides converter methods for VirtualKeyCodes
+    ///     Provides converter methods for VirtualKeyCodes
     /// </summary>
     public static class KeyCodeConverter
     {
-        private static string[] keyCodeMap = new string[]
+        private static readonly string[] KeyCodeMap =
         {
             "HOTKEY",
             "LBUTTON",
@@ -266,83 +265,81 @@ namespace LowLevelInput.Converters
             "ZOOM",
             "NONAME",
             "PA1",
-            "OEM_CLEAR",
+            "OEM_CLEAR"
         };
 
         /// <summary>
-        /// Enumerates <c>VirtualKeyCode</c> and it's <c>string</c> representation.
+        ///     Enumerates <c>VirtualKeyCode</c> and it's <c>string</c> representation.
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<KeyValuePair<VirtualKeyCode, string>> EnumerateVirtualKeyCodes()
         {
-            for (int i = 0; i < keyCodeMap.Length; i++)
+            for (int i = 0; i < KeyCodeMap.Length; i++)
             {
-                if (string.IsNullOrEmpty(keyCodeMap[i])) continue;
-                if (string.IsNullOrWhiteSpace(keyCodeMap[i])) continue;
+                if (string.IsNullOrEmpty(KeyCodeMap[i])) continue;
+                if (string.IsNullOrWhiteSpace(KeyCodeMap[i])) continue;
 
-                yield return new KeyValuePair<VirtualKeyCode, string>((VirtualKeyCode)i, keyCodeMap[i]);
+                yield return new KeyValuePair<VirtualKeyCode, string>((VirtualKeyCode) i, KeyCodeMap[i]);
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents a <c>VirtualKeyCode</c>.
+        ///     Returns a <see cref="System.String" /> that represents a <c>VirtualKeyCode</c>.
         /// </summary>
         /// <param name="code">The code.</param>
-        /// <returns>A <see cref="System.String"/> that represents a <c>VirtualKeyCode</c>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents a <c>VirtualKeyCode</c>.</returns>
         public static string ToString(VirtualKeyCode code)
         {
-            int index = (int)code;
+            int index = (int) code;
 
             if (index < 0) return string.Empty;
-            if (index >= keyCodeMap.Length) return string.Empty;
+            if (index >= KeyCodeMap.Length) return string.Empty;
 
-            return keyCodeMap[index];
+            return KeyCodeMap[index];
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        ///     Returns a <see cref="System.String" /> that represents this instance.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <returns>A <see cref="System.String"/> that represents this instance.</returns>
+        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public static string ToString(int index)
         {
             if (index < 0) return string.Empty;
-            if (index >= keyCodeMap.Length) return string.Empty;
+            if (index >= KeyCodeMap.Length) return string.Empty;
 
-            return keyCodeMap[index];
+            return KeyCodeMap[index];
         }
 
         /// <summary>
-        /// Converts a string to it's corresponding VirtualKeyCode
+        ///     Converts a string to it's corresponding VirtualKeyCode
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
         public static VirtualKeyCode ToVirtualKeyCode(string name)
         {
-            if (string.IsNullOrEmpty(name)) return VirtualKeyCode.INVALID;
-            if (string.IsNullOrWhiteSpace(name)) return VirtualKeyCode.INVALID;
+            if (string.IsNullOrEmpty(name)) return VirtualKeyCode.Invalid;
+            if (string.IsNullOrWhiteSpace(name)) return VirtualKeyCode.Invalid;
 
             string tmp = name.ToUpper();
 
-            for (int i = 0; i < keyCodeMap.Length; i++)
-            {
-                if (tmp == keyCodeMap[i]) return (VirtualKeyCode)i;
-            }
+            for (int i = 0; i < KeyCodeMap.Length; i++)
+                if (tmp == KeyCodeMap[i]) return (VirtualKeyCode) i;
 
-            return VirtualKeyCode.INVALID;
+            return VirtualKeyCode.Invalid;
         }
 
         /// <summary>
-        /// To the virtual key code.
+        ///     To the virtual key code.
         /// </summary>
         /// <param name="code">The code.</param>
         /// <returns></returns>
         public static VirtualKeyCode ToVirtualKeyCode(int code)
         {
-            if (code < 0) return VirtualKeyCode.INVALID;
-            if (code >= keyCodeMap.Length) return VirtualKeyCode.INVALID;
+            if (code < 0) return VirtualKeyCode.Invalid;
+            if (code >= KeyCodeMap.Length) return VirtualKeyCode.Invalid;
 
-            return (VirtualKeyCode)code;
+            return (VirtualKeyCode) code;
         }
     }
 }

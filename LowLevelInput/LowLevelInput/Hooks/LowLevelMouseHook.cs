@@ -8,57 +8,13 @@ using LowLevelInput.WindowsHooks;
 
 namespace LowLevelInput.Hooks
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Manage a LowLevelMouseHook
+    ///     Manage a LowLevelMouseHook
     /// </summary>
-    /// <seealso cref="System.IDisposable"/>
+    /// <seealso cref="T:System.IDisposable" />
     public class LowLevelMouseHook : IDisposable
     {
-        private WindowsHook _hook;
-        private object _lockObject;
-        
-        /// <summary>
-        /// Gets or sets a value indicating whether [capture mouse move].
-        /// </summary>
-        /// <value><c>true</c> if [capture mouse move]; otherwise, <c>false</c>.</value>
-        public bool CaptureMouseMove { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [clear injected flag].
-        /// </summary>
-        /// <value><c>true</c> if [clear injected flag]; otherwise, <c>false</c>.</value>
-        public bool ClearInjectedFlag { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is left mouse button pressed.
-        /// </summary>
-        /// <value><c>true</c> if this instance is left mouse button pressed; otherwise, <c>false</c>.</value>
-        public bool IsLeftMouseButtonPressed { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is middle mouse button pressed.
-        /// </summary>
-        /// <value><c>true</c> if this instance is middle mouse button pressed; otherwise, <c>false</c>.</value>
-        public bool IsMiddleMouseButtonPressed { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is right mouse button pressed.
-        /// </summary>
-        /// <value><c>true</c> if this instance is right mouse button pressed; otherwise, <c>false</c>.</value>
-        public bool IsRightMouseButtonPressed { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is x button1 pressed.
-        /// </summary>
-        /// <value><c>true</c> if this instance is x button1 pressed; otherwise, <c>false</c>.</value>
-        public bool IsXButton1Pressed { get; private set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is x button2 pressed.
-        /// </summary>
-        /// <value><c>true</c> if this instance is x button2 pressed; otherwise, <c>false</c>.</value>
-        public bool IsXButton2Pressed { get; private set; }
-
         /// <summary>
         /// </summary>
         /// <param name="state">The state.</param>
@@ -67,13 +23,11 @@ namespace LowLevelInput.Hooks
         /// <param name="y">The y.</param>
         public delegate void MouseEventHandler(VirtualKeyCode key, KeyState state, int x, int y);
 
-        /// <summary>
-        /// Occurs when [on mouse event].
-        /// </summary>
-        public event MouseEventHandler OnMouseEvent;
+        private readonly object _lockObject;
+        private WindowsHook _hook;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
+        ///     Initializes a new instance of the <see cref="LowLevelMouseHook" /> class.
         /// </summary>
         public LowLevelMouseHook()
         {
@@ -83,7 +37,7 @@ namespace LowLevelInput.Hooks
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
+        ///     Initializes a new instance of the <see cref="LowLevelMouseHook" /> class.
         /// </summary>
         /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
         public LowLevelMouseHook(bool captureMouseMove)
@@ -94,7 +48,7 @@ namespace LowLevelInput.Hooks
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LowLevelMouseHook"/> class.
+        ///     Initializes a new instance of the <see cref="LowLevelMouseHook" /> class.
         /// </summary>
         /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
         /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
@@ -106,7 +60,54 @@ namespace LowLevelInput.Hooks
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="LowLevelMouseHook"/> class.
+        ///     Gets or sets a value indicating whether [capture mouse move].
+        /// </summary>
+        /// <value><c>true</c> if [capture mouse move]; otherwise, <c>false</c>.</value>
+        public bool CaptureMouseMove { get; set; }
+
+        /// <summary>
+        ///     Gets or sets a value indicating whether [clear injected flag].
+        /// </summary>
+        /// <value><c>true</c> if [clear injected flag]; otherwise, <c>false</c>.</value>
+        public bool ClearInjectedFlag { get; set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance is left mouse button pressed.
+        /// </summary>
+        /// <value><c>true</c> if this instance is left mouse button pressed; otherwise, <c>false</c>.</value>
+        public bool IsLeftMouseButtonPressed { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance is middle mouse button pressed.
+        /// </summary>
+        /// <value><c>true</c> if this instance is middle mouse button pressed; otherwise, <c>false</c>.</value>
+        public bool IsMiddleMouseButtonPressed { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance is right mouse button pressed.
+        /// </summary>
+        /// <value><c>true</c> if this instance is right mouse button pressed; otherwise, <c>false</c>.</value>
+        public bool IsRightMouseButtonPressed { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance is x button1 pressed.
+        /// </summary>
+        /// <value><c>true</c> if this instance is x button1 pressed; otherwise, <c>false</c>.</value>
+        public bool IsXButton1Pressed { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether this instance is x button2 pressed.
+        /// </summary>
+        /// <value><c>true</c> if this instance is x button2 pressed; otherwise, <c>false</c>.</value>
+        public bool IsXButton2Pressed { get; private set; }
+
+        /// <summary>
+        ///     Occurs when [on mouse event].
+        /// </summary>
+        public event MouseEventHandler OnMouseEvent;
+
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="LowLevelMouseHook" /> class.
         /// </summary>
         ~LowLevelMouseHook()
         {
@@ -125,7 +126,7 @@ namespace LowLevelInput.Hooks
 
         private int HIWORD(int number)
         {
-            return (int)BitConverter.ToInt16(BitConverter.GetBytes(number), 2);
+            return BitConverter.ToInt16(BitConverter.GetBytes(number), 2);
         }
 
         private void Hook_OnHookCalled(IntPtr wParam, IntPtr lParam)
@@ -134,7 +135,7 @@ namespace LowLevelInput.Hooks
 
             IsMiddleMouseButtonPressed = false; // important to reset here
 
-            WindowsMessage msg = (WindowsMessage)((uint)wParam.ToInt32());
+            var msg = (WindowsMessage) (uint) wParam.ToInt32();
 
             int x = Marshal.ReadInt32(lParam);
             int y = Marshal.ReadInt32(lParam + 4);
@@ -142,165 +143,158 @@ namespace LowLevelInput.Hooks
             int mouseData = Marshal.ReadInt32(lParam + 8);
 
             if (ClearInjectedFlag)
-            {
                 Marshal.WriteInt32(lParam + 12, 0);
-            }
 
             switch (msg)
             {
-                case WindowsMessage.WM_LBUTTONDBLCLK:
-                case WindowsMessage.WM_NCLBUTTONDBLCLK:
+                case WindowsMessage.Lbuttondblclk:
+                case WindowsMessage.Nclbuttondblclk:
                     IsLeftMouseButtonPressed = true;
 
-                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.LBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.Lbutton, x, y);
 
                     IsLeftMouseButtonPressed = false;
 
-                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.LBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.Lbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_LBUTTONDOWN:
-                case WindowsMessage.WM_NCLBUTTONDOWN:
+                case WindowsMessage.Lbuttondown:
+                case WindowsMessage.Nclbuttondown:
                     IsLeftMouseButtonPressed = true;
-                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.LBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.Lbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_LBUTTONUP:
-                case WindowsMessage.WM_NCLBUTTONUP:
+                case WindowsMessage.Lbuttonup:
+                case WindowsMessage.Nclbuttonup:
                     IsLeftMouseButtonPressed = false;
-                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.LBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.Lbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_MBUTTONDOWN:
-                case WindowsMessage.WM_NCMBUTTONDOWN:
+                case WindowsMessage.Mbuttondown:
+                case WindowsMessage.Ncmbuttondown:
                     IsMiddleMouseButtonPressed = true;
-                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.MBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.Mbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_MBUTTONUP:
-                case WindowsMessage.WM_NCMBUTTONUP:
+                case WindowsMessage.Mbuttonup:
+                case WindowsMessage.Ncmbuttonup:
                     IsMiddleMouseButtonPressed = false;
-                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.MBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.Mbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_MBUTTONDBLCLK:
-                case WindowsMessage.WM_NCMBUTTONDBLCLK:
+                case WindowsMessage.Mbuttondblclk:
+                case WindowsMessage.Ncmbuttondblclk:
                     IsMiddleMouseButtonPressed = true;
 
-                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.MBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.Mbutton, x, y);
 
                     IsMiddleMouseButtonPressed = false;
 
-                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.MBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.Mbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_RBUTTONDBLCLK:
-                case WindowsMessage.WM_NCRBUTTONDBLCLK:
+                case WindowsMessage.Rbuttondblclk:
+                case WindowsMessage.Ncrbuttondblclk:
                     IsRightMouseButtonPressed = true;
 
-                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.RBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.Rbutton, x, y);
 
                     IsRightMouseButtonPressed = false;
 
-                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.RBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.Rbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_RBUTTONDOWN:
-                case WindowsMessage.WM_NCRBUTTONDOWN:
+                case WindowsMessage.Rbuttondown:
+                case WindowsMessage.Ncrbuttondown:
                     IsRightMouseButtonPressed = true;
 
-                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.RBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Down, VirtualKeyCode.Rbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_RBUTTONUP:
-                case WindowsMessage.WM_NCRBUTTONUP:
+                case WindowsMessage.Rbuttonup:
+                case WindowsMessage.Ncrbuttonup:
                     IsRightMouseButtonPressed = false;
 
-                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.RBUTTON, x, y);
+                    InvokeEventListeners(KeyState.Up, VirtualKeyCode.Rbutton, x, y);
                     break;
 
-                case WindowsMessage.WM_XBUTTONDBLCLK:
-                case WindowsMessage.WM_NCXBUTTONDBLCLK:
+                case WindowsMessage.Xbuttondblclk:
+                case WindowsMessage.Ncxbuttondblclk:
                     if (HIWORD(mouseData) == 0x1)
                     {
                         IsXButton1Pressed = true;
 
-                        InvokeEventListeners(KeyState.Down, VirtualKeyCode.XBUTTON1, x, y);
+                        InvokeEventListeners(KeyState.Down, VirtualKeyCode.Xbutton1, x, y);
 
                         IsXButton1Pressed = false;
 
-                        InvokeEventListeners(KeyState.Up, VirtualKeyCode.XBUTTON1, x, y);
+                        InvokeEventListeners(KeyState.Up, VirtualKeyCode.Xbutton1, x, y);
                     }
                     else
                     {
                         IsXButton2Pressed = true;
 
-                        InvokeEventListeners(KeyState.Down, VirtualKeyCode.XBUTTON2, x, y);
+                        InvokeEventListeners(KeyState.Down, VirtualKeyCode.Xbutton2, x, y);
 
                         IsXButton2Pressed = false;
 
-                        InvokeEventListeners(KeyState.Up, VirtualKeyCode.XBUTTON2, x, y);
+                        InvokeEventListeners(KeyState.Up, VirtualKeyCode.Xbutton2, x, y);
                     }
                     break;
 
-                case WindowsMessage.WM_XBUTTONDOWN:
-                case WindowsMessage.WM_NCXBUTTONDOWN:
+                case WindowsMessage.Xbuttondown:
+                case WindowsMessage.Ncxbuttondown:
                     if (HIWORD(mouseData) == 0x1)
                     {
                         IsXButton1Pressed = true;
 
-                        InvokeEventListeners(KeyState.Down, VirtualKeyCode.XBUTTON1, x, y);
+                        InvokeEventListeners(KeyState.Down, VirtualKeyCode.Xbutton1, x, y);
                     }
                     else
                     {
                         IsXButton2Pressed = true;
 
-                        InvokeEventListeners(KeyState.Down, VirtualKeyCode.XBUTTON2, x, y);
+                        InvokeEventListeners(KeyState.Down, VirtualKeyCode.Xbutton2, x, y);
                     }
                     break;
 
-                case WindowsMessage.WM_XBUTTONUP:
-                case WindowsMessage.WM_NCXBUTTONUP:
+                case WindowsMessage.Xbuttonup:
+                case WindowsMessage.Ncxbuttonup:
                     if (HIWORD(mouseData) == 0x1)
                     {
                         IsXButton1Pressed = false;
 
-                        InvokeEventListeners(KeyState.Up, VirtualKeyCode.XBUTTON1, x, y);
+                        InvokeEventListeners(KeyState.Up, VirtualKeyCode.Xbutton1, x, y);
                     }
                     else
                     {
                         IsXButton2Pressed = false;
 
-                        InvokeEventListeners(KeyState.Up, VirtualKeyCode.XBUTTON2, x, y);
+                        InvokeEventListeners(KeyState.Up, VirtualKeyCode.Xbutton2, x, y);
                     }
                     break;
 
-                case WindowsMessage.WM_MOUSEWHEEL:
-                case WindowsMessage.WM_MOUSEHWHEEL:
-                    InvokeEventListeners(KeyState.None, VirtualKeyCode.SCROLL, HIWORD(mouseData), HIWORD(mouseData));
+                case WindowsMessage.Mousewheel:
+                case WindowsMessage.Mousehwheel:
+                    InvokeEventListeners(KeyState.None, VirtualKeyCode.Scroll, HIWORD(mouseData), HIWORD(mouseData));
 
                     break;
 
-                case WindowsMessage.WM_MOUSEMOVE:
-                case WindowsMessage.WM_NCMOUSEMOVE:
+                case WindowsMessage.Mousemove:
+                case WindowsMessage.Ncmousemove:
                     if (CaptureMouseMove)
-                    {
-                        InvokeEventListeners(KeyState.None, VirtualKeyCode.INVALID, x, y);
-                    }
+                        InvokeEventListeners(KeyState.None, VirtualKeyCode.Invalid, x, y);
                     break;
             }
         }
 
         private void InvokeEventListeners(KeyState state, VirtualKeyCode key, int x = 0, int y = 0)
         {
-            Task.Factory.StartNew(() =>
-            {
-                OnMouseEvent?.Invoke(key, state, x, y);
-            });
+            Task.Factory.StartNew(() => { OnMouseEvent?.Invoke(key, state, x, y); });
         }
 
         /// <summary>
-        /// Installs the hook.
+        ///     Installs the hook.
         /// </summary>
         /// <returns></returns>
         public bool InstallHook()
@@ -315,9 +309,7 @@ namespace LowLevelInput.Hooks
             _hook.OnHookCalled += Hook_OnHookCalled;
 
             if (!_hook.InstallHook())
-            {
                 WinApi.ThrowWin32Exception("Unknown error while installing hook.");
-            }
 
             Global.OnProcessExit += Global_OnProcessExit;
             Global.OnUnhandledException += Global_OnUnhandledException;
@@ -326,7 +318,7 @@ namespace LowLevelInput.Hooks
         }
 
         /// <summary>
-        /// Uninstalls the hook.
+        ///     Uninstalls the hook.
         /// </summary>
         /// <returns></returns>
         public bool UninstallHook()
@@ -352,32 +344,31 @@ namespace LowLevelInput.Hooks
 
         #region IDisposable Support
 
-        private bool disposedValue = false;
+        private bool _disposedValue;
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
+        ///     Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-        /// unmanaged resources.
+        ///     <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
+        ///     unmanaged resources.
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (_disposedValue) return;
+            if (disposing)
             {
-                if (disposing)
-                {
-                }
-
-                UninstallHook();
-
-                disposedValue = true;
             }
+
+            UninstallHook();
+
+            _disposedValue = true;
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting
-        /// unmanaged resources.
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting
+        ///     unmanaged resources.
         /// </summary>
         public void Dispose()
         {

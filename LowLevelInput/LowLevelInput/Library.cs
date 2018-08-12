@@ -1,60 +1,41 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace LowLevelInput
 {
     /// <summary>
-    /// Provides displayable information about this library.
+    ///     Provides displayable information about this library.
     /// </summary>
     public static class Library
     {
         /// <summary>
-        /// Gets the author of this library.
+        ///     Gets the author of this library.
         /// </summary>
         /// <value>
-        /// The name of the author.
+        ///     The name of the author.
         /// </value>
-        public static string Author
-        {
-            get
-            {
-                return "michel-pi";
-            }
-        }
+        public static string Author => "michel-pi";
 
         /// <summary>
-        /// Gets the name of this library.
+        ///     Gets the name of this library.
         /// </summary>
         /// <value>
-        /// The name of the library.
+        ///     The name of the library.
         /// </value>
-        public static string Name
-        {
-            get
-            {
-                return "LowLevelInput.Net";
-            }
-        }
+        public static string Name => "LowLevelInput.Net";
 
         /// <summary>
-        /// Gets the projects url.
+        ///     Gets the projects url.
         /// </summary>
         /// <value>
-        /// The projects url.
+        ///     The projects url.
         /// </value>
-        public static string URL
-        {
-            get
-            {
-                return "https://github.com/michel-pi/LowLevelInput.Net";
-            }
-        }
+        public static string ProjectUrl => "https://github.com/michel-pi/LowLevelInput.Net";
 
         /// <summary>
-        /// Gets the version of this library.
+        ///     Gets the version of this library.
         /// </summary>
         /// <value>
-        /// The version.
+        ///     The version.
         /// </value>
         public static string Version
         {
@@ -62,8 +43,8 @@ namespace LowLevelInput
             {
                 try
                 {
-                    Assembly assembly = Assembly.GetExecutingAssembly();
-                    AssemblyName assemblyName = assembly.GetName();
+                    var assembly = Assembly.GetExecutingAssembly();
+                    var assemblyName = assembly.GetName();
 
                     return assemblyName.Version.ToString();
                 }

@@ -1,29 +1,27 @@
-﻿using System;
-
-namespace LowLevelInput.Hooks
+﻿namespace LowLevelInput.Hooks
 {
     /// <summary>
-    /// Defines the state of a key
+    ///     Defines the state of a key
     /// </summary>
-    public enum KeyState : int
+    public enum KeyState
     {
         /// <summary>
-        /// None
+        ///     None
         /// </summary>
         None,
 
         /// <summary>
-        /// Up
+        ///     Up
         /// </summary>
         Up,
 
         /// <summary>
-        /// Down
+        ///     Down
         /// </summary>
         Down,
 
         /// <summary>
-        /// Pressed
+        ///     Pressed
         /// </summary>
         Pressed
     }

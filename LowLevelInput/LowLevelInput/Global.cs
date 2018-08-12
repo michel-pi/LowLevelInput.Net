@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace LowLevelInput
 {
     internal static class Global
     {
-        static Global()
-        {
-            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
-
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        }
-
         /// <summary>
         /// </summary>
         public delegate void ProcessExitCallback();
@@ -21,13 +12,20 @@ namespace LowLevelInput
         /// </summary>
         public delegate void UnhandledExceptionCallback();
 
+        static Global()
+        {
+            AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
         /// <summary>
-        /// Occurs when [on process exit].
+        ///     Occurs when [on process exit].
         /// </summary>
         public static event ProcessExitCallback OnProcessExit;
 
         /// <summary>
-        /// Occurs when [on unhandled exception].
+        ///     Occurs when [on unhandled exception].
         /// </summary>
         public static event UnhandledExceptionCallback OnUnhandledException;
 

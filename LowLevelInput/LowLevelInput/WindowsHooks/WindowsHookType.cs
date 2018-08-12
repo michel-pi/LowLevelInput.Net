@@ -1,90 +1,88 @@
-﻿using System;
-
-namespace LowLevelInput.WindowsHooks
+﻿namespace LowLevelInput.WindowsHooks
 {
     /// <summary>
-    /// An enumeration of all WindowsHook types
+    ///     An enumeration of all WindowsHook types
     /// </summary>
     public enum WindowsHookType
     {
         /// <summary>
-        /// The MSG filter
+        ///     The MSG filter
         /// </summary>
         MsgFilter = -1,
 
         /// <summary>
-        /// The journal record
+        ///     The journal record
         /// </summary>
         JournalRecord = 0,
 
         /// <summary>
-        /// The journal playback
+        ///     The journal playback
         /// </summary>
         JournalPlayback = 1,
 
         /// <summary>
-        /// The keyboard
+        ///     The keyboard
         /// </summary>
         Keyboard = 2,
 
         /// <summary>
-        /// The get message
+        ///     The get message
         /// </summary>
         GetMessage = 3,
 
         /// <summary>
-        /// The call WND proc
+        ///     The call WND proc
         /// </summary>
         CallWndProc = 4,
 
         /// <summary>
-        /// The CBT
+        ///     The CBT
         /// </summary>
-        CBT = 5,
+        Cbt = 5,
 
         /// <summary>
-        /// The system MSG filter
+        ///     The system MSG filter
         /// </summary>
         SysMsgFilter = 6,
 
         /// <summary>
-        /// The mouse
+        ///     The mouse
         /// </summary>
         Mouse = 7,
 
         /// <summary>
-        /// The undocumented
+        ///     The undocumented
         /// </summary>
         Undocumented = 8,
 
         /// <summary>
-        /// The debug
+        ///     The debug
         /// </summary>
         Debug = 9,
 
         /// <summary>
-        /// The shell
+        ///     The shell
         /// </summary>
         Shell = 10,
 
         /// <summary>
-        /// The foreground idle
+        ///     The foreground idle
         /// </summary>
         ForegroundIdle = 11,
 
         /// <summary>
-        /// The call WND proc ret
+        ///     The call WND proc ret
         /// </summary>
         CallWndProcRet = 12,
 
         /// <summary>
-        /// The low level keyboard
+        ///     The low level keyboard
         /// </summary>
         LowLevelKeyboard = 13,
 
         /// <summary>
-        /// The low level mouse
+        ///     The low level mouse
         /// </summary>
-        LowLevelMouse = 14,
+        LowLevelMouse = 14
     }
 }

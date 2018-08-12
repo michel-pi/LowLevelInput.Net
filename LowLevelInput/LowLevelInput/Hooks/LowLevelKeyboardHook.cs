@@ -9,34 +9,24 @@ using LowLevelInput.WindowsHooks;
 
 namespace LowLevelInput.Hooks
 {
+    /// <inheritdoc />
     /// <summary>
-    /// Manage a LowLevelKeyboardHook
+    ///     Manage a LowLevelKeyboardHook
     /// </summary>
-    /// <seealso cref="System.IDisposable"/>
+    /// <seealso cref="T:System.IDisposable" />
     public class LowLevelKeyboardHook : IDisposable
     {
-        private WindowsHook _hook;
-        private object _lockObject;
-        
-        /// <summary>
-        /// Gets or sets a value indicating whether [clear injected flag].
-        /// </summary>
-        /// <value><c>true</c> if [clear injected flag]; otherwise, <c>false</c>.</value>
-        public bool ClearInjectedFlag { get; set; }
-
         /// <summary>
         /// </summary>
         /// <param name="state">The state.</param>
         /// <param name="key">The key.</param>
         public delegate void KeyboardEventHandler(VirtualKeyCode key, KeyState state);
 
-        /// <summary>
-        /// Occurs when [on keyboard event].
-        /// </summary>
-        public event KeyboardEventHandler OnKeyboardEvent;
+        private readonly object _lockObject;
+        private WindowsHook _hook;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LowLevelKeyboardHook"/> class.
+        ///     Initializes a new instance of the <see cref="LowLevelKeyboardHook" /> class.
         /// </summary>
         public LowLevelKeyboardHook()
         {
@@ -44,7 +34,7 @@ namespace LowLevelInput.Hooks
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LowLevelKeyboardHook"/> class.
+        ///     Initializes a new instance of the <see cref="LowLevelKeyboardHook" /> class.
         /// </summary>
         /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
         public LowLevelKeyboardHook(bool clearInjectedFlag)
@@ -54,7 +44,18 @@ namespace LowLevelInput.Hooks
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="LowLevelKeyboardHook"/> class.
+        ///     Gets or sets a value indicating whether [clear injected flag].
+        /// </summary>
+        /// <value><c>true</c> if [clear injected flag]; otherwise, <c>false</c>.</value>
+        public bool ClearInjectedFlag { get; set; }
+
+        /// <summary>
+        ///     Occurs when [on keyboard event].
+        /// </summary>
+        public event KeyboardEventHandler OnKeyboardEvent;
+
+        /// <summary>
+        ///     Finalizes an instance of the <see cref="LowLevelKeyboardHook" /> class.
         /// </summary>
         ~LowLevelKeyboardHook()
         {
@@ -79,7 +80,7 @@ namespace LowLevelInput.Hooks
             {
                 int flags = Marshal.ReadInt32(lParam + 8);
 
-                BitArray bits = new BitArray(BitConverter.GetBytes(flags));
+                var bits = new BitArray(BitConverter.GetBytes(flags));
 
                 if (bits.Get(1) || bits.Get(4))
                 {
@@ -96,25 +97,25 @@ namespace LowLevelInput.Hooks
 
             if (OnKeyboardEvent == null) return;
 
-            WindowsMessage msg = (WindowsMessage)((uint)wParam.ToInt32());
+            var msg = (WindowsMessage) (uint) wParam.ToInt32();
 
-            VirtualKeyCode key = (VirtualKeyCode)Marshal.ReadInt32(lParam);
+            var key = (VirtualKeyCode) Marshal.ReadInt32(lParam);
 
             switch (msg)
             {
-                case WindowsMessage.WM_KEYDOWN:
+                case WindowsMessage.Keydown:
                     InvokeEventListeners(KeyState.Down, key);
                     break;
 
-                case WindowsMessage.WM_KEYUP:
+                case WindowsMessage.Keyup:
                     InvokeEventListeners(KeyState.Up, key);
                     break;
 
-                case WindowsMessage.WM_SYSKEYDOWN:
+                case WindowsMessage.Syskeydown:
                     InvokeEventListeners(KeyState.Down, key);
                     break;
 
-                case WindowsMessage.WM_SYSKEYUP:
+                case WindowsMessage.Syskeyup:
                     InvokeEventListeners(KeyState.Up, key);
                     break;
             }
@@ -122,14 +123,11 @@ namespace LowLevelInput.Hooks
 
         private void InvokeEventListeners(KeyState state, VirtualKeyCode key)
         {
-            Task.Factory.StartNew(() =>
-            {
-                OnKeyboardEvent?.Invoke(key, state);
-            });
+            Task.Factory.StartNew(() => { OnKeyboardEvent?.Invoke(key, state); });
         }
 
         /// <summary>
-        /// Installs the hook.
+        ///     Installs the hook.
         /// </summary>
         /// <returns></returns>
         public bool InstallHook()
@@ -143,10 +141,8 @@ namespace LowLevelInput.Hooks
 
             _hook.OnHookCalled += Hook_OnHookCalled;
 
-            if(!_hook.InstallHook())
-            {
+            if (!_hook.InstallHook())
                 WinApi.ThrowWin32Exception("Unknown error while installing hook.");
-            }
 
             Global.OnProcessExit += Global_OnProcessExit;
             Global.OnUnhandledException += Global_OnUnhandledException;
@@ -155,7 +151,7 @@ namespace LowLevelInput.Hooks
         }
 
         /// <summary>
-        /// Uninstalls the hook.
+        ///     Uninstalls the hook.
         /// </summary>
         /// <returns></returns>
         public bool UninstallHook()
@@ -181,32 +177,28 @@ namespace LowLevelInput.Hooks
 
         #region IDisposable Support
 
-        private bool disposedValue = false;
+        private bool _disposedValue;
 
         /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
+        ///     Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing">
-        /// <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
-        /// unmanaged resources.
+        ///     <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only
+        ///     unmanaged resources.
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                }
+            if (_disposedValue) return;
 
-                UninstallHook();
+            UninstallHook();
 
-                disposedValue = true;
-            }
+            _disposedValue = true;
         }
 
+        /// <inheritdoc />
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting
-        /// unmanaged resources.
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting
+        ///     unmanaged resources.
         /// </summary>
         public void Dispose()
         {

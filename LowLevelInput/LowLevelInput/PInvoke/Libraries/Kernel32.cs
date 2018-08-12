@@ -1,13 +1,13 @@
-﻿using System;
-using System.Security;
+﻿using System.Security;
 
 namespace LowLevelInput.PInvoke.Libraries
 {
-    [SuppressUnmanagedCodeSecurity()]
+    [SuppressUnmanagedCodeSecurity]
     internal static class Kernel32
     {
-        public static GetCurrentThreadId_t GetCurrentThreadId = WinApi.GetMethod<GetCurrentThreadId_t>("kernel32.dll", "GetCurrentThreadId");
+        public delegate uint GetCurrentThreadIdDelegate();
 
-        public delegate uint GetCurrentThreadId_t();
+        public static GetCurrentThreadIdDelegate GetCurrentThreadId =
+            WinApi.GetMethod<GetCurrentThreadIdDelegate>("kernel32.dll", "GetCurrentThreadId");
     }
 }
