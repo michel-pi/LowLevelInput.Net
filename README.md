@@ -16,7 +16,7 @@ A thread safe and event driven Low Level Mouse and Keyboard Hook
 - Can remove the Injected flag from any input
 - Complete VirtualKeyCodes enum
 
-### Contribute
+# Contribute
 
 Clone or download the repository.
 
