@@ -290,7 +290,7 @@ namespace LowLevelInput.Hooks
 
         private void InvokeEventListeners(KeyState state, VirtualKeyCode key, int x = 0, int y = 0)
         {
-            Task.Factory.StartNew(() => { OnMouseEvent?.Invoke(key, state, x, y); });
+            Task.Factory.StartNew(() => OnMouseEvent?.Invoke(key, state, x, y));
         }
 
         /// <summary>

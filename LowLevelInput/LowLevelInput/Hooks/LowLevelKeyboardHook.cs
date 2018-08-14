@@ -123,7 +123,7 @@ namespace LowLevelInput.Hooks
 
         private void InvokeEventListeners(KeyState state, VirtualKeyCode key)
         {
-            Task.Factory.StartNew(() => { OnKeyboardEvent?.Invoke(key, state); });
+            Task.Factory.StartNew(() => OnKeyboardEvent?.Invoke(key, state));
         }
 
         /// <summary>
