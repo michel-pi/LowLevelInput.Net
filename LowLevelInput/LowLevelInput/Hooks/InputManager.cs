@@ -324,12 +324,6 @@ namespace LowLevelInput.Hooks
         /// </exception>
         public bool IsPressed(VirtualKeyCode key)
         {
-            if (!IsInitialized)
-                throw new InvalidOperationException("The " + nameof(InputManager) +
-                                                    " needs to be initialized before it can execute this method.");
-
-            if (key == VirtualKeyCode.Invalid) return false;
-
             return GetState(key) == KeyState.Down;
         }
 
@@ -344,12 +338,6 @@ namespace LowLevelInput.Hooks
         /// </exception>
         public bool WasPressed(VirtualKeyCode key)
         {
-            if (!IsInitialized)
-                throw new InvalidOperationException("The " + nameof(InputManager) +
-                                                    " needs to be initialized before it can execute this method.");
-
-            if (key == VirtualKeyCode.Invalid) return false;
-
             if (GetState(key) == KeyState.Pressed)
             {
                 SetState(key, KeyState.Up);
