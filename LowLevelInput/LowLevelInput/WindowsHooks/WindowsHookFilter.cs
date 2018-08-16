@@ -6,10 +6,22 @@ using LowLevelInput.PInvoke.Types;
 
 namespace LowLevelInput.WindowsHooks
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class WindowsHookFilter
     {
+        /// <summary>
+        /// return true if a filter should take action
+        /// </summary>
+        /// <param name="state">The state.</param>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public delegate bool WindowsHookFilterEventHandler(KeyState state, VirtualKeyCode key);
 
+        /// <summary>
+        /// Occurs when [filter]. Returns true if a filter should take action
+        /// </summary>
         public static event WindowsHookFilterEventHandler Filter;
 
         // returns true if an event needs to be filtered
