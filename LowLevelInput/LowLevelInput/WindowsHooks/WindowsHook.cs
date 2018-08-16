@@ -68,7 +68,19 @@ namespace LowLevelInput.WindowsHooks
         private IntPtr HookProcedure(int nCode, IntPtr wParam, IntPtr lParam)
         {
             if (nCode == 0)
-                OnHookCalled?.Invoke(wParam, lParam);
+            {
+                if (WindowsHookFilter.InternalFilterEventsHelper(wParam, lParam))
+                {
+                    // filter event
+                    nCode = -1;
+                    wParam = IntPtr.Zero;
+                    lParam = IntPtr.Zero;
+                }
+                else
+                {
+                    OnHookCalled?.Invoke(wParam, lParam);
+                }
+            }
 
             return User32.CallNextHookEx(_hookHandler, nCode, wParam, lParam);
         }
