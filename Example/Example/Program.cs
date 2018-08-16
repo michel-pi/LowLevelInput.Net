@@ -1,6 +1,5 @@
 ﻿using System;
 
-using LowLevelInput;
 using LowLevelInput.Converters;
 using LowLevelInput.Hooks;
 
@@ -10,6 +9,10 @@ namespace Example
     {
         static void Main(string[] args)
         {
+            TestFilter();
+
+            return;
+
             // creates a new instance to capture inputs
             // also provides IsPressed, WasPressed and GetState methods
             var inputManager = new InputManager();
@@ -47,6 +50,34 @@ namespace Example
             mouseHook.Dispose();
             keyboardHook.Dispose();
             inputManager.Dispose();
+        }
+        
+        private static void TestFilter()
+        {
+            LowLevelInput.WindowsHooks.WindowsHookFilter.Filter += (KeyState state, VirtualKeyCode key) =>
+            {
+                if (key == VirtualKeyCode.A) return true; // filter event
+
+                return false; // event passes
+            };
+
+            InputManager manager = new InputManager();
+
+            manager.OnKeyboardEvent += (VirtualKeyCode key, KeyState state) =>
+            {
+                Console.WriteLine("Key: " + key + ", State: " + state);
+            };
+
+            manager.Initialize();
+
+            while(true)
+            {
+                string line = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(line)) continue;
+
+                if (line.ToLower() == "exit") break;
+            }
         }
 
         private static void MouseHook_OnMouseEvent(VirtualKeyCode key, KeyState state, int x, int y)
