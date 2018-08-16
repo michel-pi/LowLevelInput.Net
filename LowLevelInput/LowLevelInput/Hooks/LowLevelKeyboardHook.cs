@@ -104,17 +104,11 @@ namespace LowLevelInput.Hooks
             switch (msg)
             {
                 case WindowsMessage.Keydown:
-                    InvokeEventListeners(KeyState.Down, key);
-                    break;
-
-                case WindowsMessage.Keyup:
-                    InvokeEventListeners(KeyState.Up, key);
-                    break;
-
                 case WindowsMessage.Syskeydown:
                     InvokeEventListeners(KeyState.Down, key);
                     break;
 
+                case WindowsMessage.Keyup:
                 case WindowsMessage.Syskeyup:
                     InvokeEventListeners(KeyState.Up, key);
                     break;
