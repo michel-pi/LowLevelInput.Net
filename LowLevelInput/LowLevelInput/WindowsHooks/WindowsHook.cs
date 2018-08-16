@@ -71,10 +71,7 @@ namespace LowLevelInput.WindowsHooks
             {
                 if (WindowsHookFilter.InternalFilterEventsHelper(wParam, lParam))
                 {
-                    // filter event
-                    nCode = -1;
-                    wParam = IntPtr.Zero;
-                    lParam = IntPtr.Zero;
+                    return (IntPtr)(-1);
                 }
                 else
                 {
