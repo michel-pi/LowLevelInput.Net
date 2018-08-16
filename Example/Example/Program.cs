@@ -33,13 +33,13 @@ namespace Example
 
             // registers an event (callback) which gets fired whenever the key changes it's state
             // be sure to use this method after the InputManager is initialized
-            inputManager.RegisterEvent(VirtualKeyCode.LBUTTON, InputManager_KeyStateChanged);
+            inputManager.RegisterEvent(VirtualKeyCode.Lbutton, InputManager_KeyStateChanged);
 
             Console.WriteLine("Waiting for up arrow key to exit!");
 
             // This method will block the current thread until the up arrow key changes it's state to Down
             // There is no performance penalty (spinning loop waiting for this)
-            inputManager.WaitForEvent(VirtualKeyCode.UP, KeyState.Down);
+            inputManager.WaitForEvent(VirtualKeyCode.Up, KeyState.Down);
 
             // be sure to dispose instances you dont use anymore
             // not doing so may block windows input and let inputs appear delayed or lagging
