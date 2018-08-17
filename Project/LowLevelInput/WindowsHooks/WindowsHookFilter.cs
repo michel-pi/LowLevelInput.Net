@@ -17,7 +17,7 @@ namespace LowLevelInput.WindowsHooks
         /// <param name="state">The state.</param>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        public delegate bool WindowsHookFilterEventHandler(KeyState state, VirtualKeyCode key);
+        public delegate bool WindowsHookFilterEventHandler(VirtualKeyCode key, KeyState state);
 
         /// <summary>
         /// Occurs when [filter]. Returns true if a filter should take action
@@ -59,7 +59,7 @@ namespace LowLevelInput.WindowsHooks
 
             if (state == KeyState.None) return false;
             
-            return events.Invoke(state, key);
+            return events.Invoke(key, state);
         }
     }
 }
