@@ -77,23 +77,7 @@ namespace LowLevelInput.Hooks
             if (lParam == IntPtr.Zero) return;
 
             if (ClearInjectedFlag)
-            {
-                int flags = Marshal.ReadInt32(lParam + 8);
-
-                var bits = new BitArray(BitConverter.GetBytes(flags));
-
-                if (bits.Get(1) || bits.Get(4))
-                {
-                    bits.Set(1, false);
-                    bits.Set(4, false);
-
-                    int[] modifiedBits = new int[1];
-
-                    bits.CopyTo(modifiedBits, 0);
-
-                    Marshal.WriteInt32(lParam + 8, modifiedBits[0]);
-                }
-            }
+                HelperMethods.KbdClearInjectedFlag(lParam);
 
             if (OnKeyboardEvent == null) return;
 

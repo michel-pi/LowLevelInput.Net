@@ -138,12 +138,12 @@ namespace LowLevelInput.Hooks
             var msg = (WindowsMessage) (uint) wParam.ToInt32();
 
             int x = Marshal.ReadInt32(lParam);
-            int y = Marshal.ReadInt32(lParam + 4);
+            int y = Marshal.ReadInt32(lParam, 4);
 
-            int mouseData = Marshal.ReadInt32(lParam + 8);
+            int mouseData = Marshal.ReadInt32(lParam, 8);
 
             if (ClearInjectedFlag)
-                Marshal.WriteInt32(lParam + 12, 0);
+                Marshal.WriteInt32(lParam, 12, 0);
 
             switch (msg)
             {
