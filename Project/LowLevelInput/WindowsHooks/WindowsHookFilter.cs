@@ -35,31 +35,27 @@ namespace LowLevelInput.WindowsHooks
 
             var msg = (WindowsMessage)(uint)wParam.ToInt32();
 
-            var key = (VirtualKeyCode)Marshal.ReadInt32(lParam);
-
-            KeyState state;
-
             switch (msg)
             {
 
                 case WindowsMessage.Keydown:
                 case WindowsMessage.Syskeydown:
-                    state = KeyState.Down;
-                    break;
+                    return events.Invoke((VirtualKeyCode)Marshal.ReadInt32(lParam), KeyState.Down);
 
                 case WindowsMessage.Keyup:
                 case WindowsMessage.Syskeyup:
-                    state = KeyState.Up;
-                    break;
+                    return events.Invoke((VirtualKeyCode)Marshal.ReadInt32(lParam), KeyState.Up);
 
                 default:
-                    state = KeyState.None;
-                    break;
+                    if(HelperMethods.TryGetMouseData(wParam, lParam, out VirtualKeyCode key, out KeyState state))
+                    {
+                        return events.Invoke(key, state);
+                    }
+                    else
+                    {
+                        return false;
+                    }
             }
-
-            if (state == KeyState.None) return false;
-            
-            return events.Invoke(key, state);
         }
     }
 }
