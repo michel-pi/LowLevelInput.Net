@@ -47,6 +47,7 @@
     <Compile Include="Converters\KeyCodeConverter.cs" />
     <Compile Include="Converters\KeyStateConverter.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="HelperMethods.cs" />
     <Compile Include="Hooks\KeyState.cs" />
     <Compile Include="Hooks\LowLevelKeyboardHook.cs" />
     <Compile Include="Hooks\LowLevelMouseHook.cs" />
