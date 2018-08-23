@@ -22,9 +22,14 @@ namespace LowLevelInput.WindowsHooks
         /// <summary>
         /// Occurs when [filter]. Returns true if a filter should take action
         /// </summary>
-        public static event WindowsHookFilterEventHandler Filter;
+        public static WindowsHookFilterEventHandler Filter;
 
-        // returns true if an event needs to be filtered
+        /// <summary>
+        /// returns true if an event needs to be filtered
+        /// </summary>
+        /// <param name="wParam">The w parameter.</param>
+        /// <param name="lParam">The l parameter.</param>
+        /// <returns></returns>
         internal static bool InternalFilterEventsHelper(IntPtr wParam, IntPtr lParam)
         {
             if (wParam == IntPtr.Zero || lParam == IntPtr.Zero) return false;
