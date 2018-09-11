@@ -104,7 +104,7 @@ namespace LowLevelInput.WindowsHooks
             while (_hookThreadId == 0) Thread.Sleep(10);
 
             if (_hookHandler == IntPtr.Zero)
-                WinApi.ThrowWin32Exception("Failed to \"SetWindowsHookEx\" with " + WindowsHookType);
+                WinApi.ThrowWin32Exception("Failed to \"SetWindowsHookEx\"");
 
             return true;
         }
