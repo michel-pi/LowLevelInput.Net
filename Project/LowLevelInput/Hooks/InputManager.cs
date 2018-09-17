@@ -459,6 +459,70 @@ namespace LowLevelInput.Hooks
             return result;
         }
 
+        /// <summary>
+        /// Gets the hotkey.
+        /// </summary>
+        /// <param name="timeout">The timeout.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException">The " + nameof(InputManager) +
+        ///                                                     " needs to be initialized before it can execute this method.</exception>
+        public VirtualKeyCode GetHotkey(int timeout = -1)
+        {
+            if (!IsInitialized)
+                throw new InvalidOperationException("The " + nameof(InputManager) +
+                                                    " needs to be initialized before it can execute this method.");
+
+            var threadLock = new object();
+            VirtualKeyCode hotkey = VirtualKeyCode.Invalid;
+
+            LowLevelMouseHook.MouseEventHandler mouseEventHandler = (VirtualKeyCode key, KeyState state, int x, int y) =>
+            {
+                if (state != KeyState.Down) return;
+
+                hotkey = key;
+
+                if (!Monitor.TryEnter(threadLock)) return;
+
+                // someone else has the lock
+                Monitor.PulseAll(threadLock);
+                Monitor.Exit(threadLock);
+            };
+            LowLevelKeyboardHook.KeyboardEventHandler keyboardEventHandler = (VirtualKeyCode key, KeyState state) =>
+            {
+                if (state != KeyState.Down) return;
+
+                hotkey = key;
+
+                if (!Monitor.TryEnter(threadLock)) return;
+
+                // someone else has the lock
+                Monitor.PulseAll(threadLock);
+                Monitor.Exit(threadLock);
+            };
+
+            this.OnMouseEvent += mouseEventHandler;
+            this.OnKeyboardEvent += keyboardEventHandler;
+
+            bool result;
+            
+            Monitor.Enter(threadLock);
+
+            if (timeout < 0)
+            {
+                Monitor.Wait(threadLock);
+                result = true;
+            }
+            else
+            {
+                result = Monitor.Wait(threadLock, timeout);
+            }
+
+            this.OnMouseEvent -= mouseEventHandler;
+            this.OnKeyboardEvent -= keyboardEventHandler;
+
+            return hotkey;
+        }
+
         #region IDisposable Support
 
         private bool _disposedValue;
@@ -476,7 +540,7 @@ namespace LowLevelInput.Hooks
 
             try
             {
-                Terminate();
+                if (IsInitialized) Terminate();
             }
             catch
             {
