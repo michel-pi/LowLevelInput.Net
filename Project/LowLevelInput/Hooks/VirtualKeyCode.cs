@@ -98,7 +98,7 @@
         /// <summary>
         ///     IME Hangul mode
         /// </summary>
-        Hangul = 0x15,
+        Hangul = 0x16,
 
         /// <summary>
         ///     IME Junja mode
@@ -118,7 +118,7 @@
         /// <summary>
         ///     IME Kanji mode
         /// </summary>
-        Kanji = 0x19,
+        Kanji = 0x1A,
 
         /// <summary>
         ///     ESC key

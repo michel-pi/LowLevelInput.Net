@@ -32,11 +32,11 @@ namespace LowLevelInput.Converters
             keyCodeToIndex.Add("Pause", 0x13);
             keyCodeToIndex.Add("Capital", 0x14);
             keyCodeToIndex.Add("Kana", 0x15);
-            keyCodeToIndex.Add("Hangul", 0x15);
+            keyCodeToIndex.Add("Hangul", 0x16);
             keyCodeToIndex.Add("Junja", 0x17);
             keyCodeToIndex.Add("Final", 0x18);
             keyCodeToIndex.Add("Hanja", 0x19);
-            keyCodeToIndex.Add("Kanji", 0x19);
+            keyCodeToIndex.Add("Kanji", 0x1A);
             keyCodeToIndex.Add("Escape", 0x1B);
             keyCodeToIndex.Add("Convert", 0x1C);
             keyCodeToIndex.Add("Nonconvert", 0x1D);
@@ -194,7 +194,7 @@ namespace LowLevelInput.Converters
             foreach (var pair in keyCodeToIndex)
                 indexToKeyCode.Add(pair.Value, pair.Key);
         }
-
+        
         /// <summary>
         ///     Enumerates <c>VirtualKeyCode</c> and it's <c>string</c> representation.
         /// </summary>
