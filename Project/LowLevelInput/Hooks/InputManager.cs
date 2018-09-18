@@ -188,15 +188,17 @@ namespace LowLevelInput.Hooks
         {
             if (key == VirtualKeyCode.Invalid) return;
 
+            state = state == KeyState.Down && _keyStates[key] == KeyState.Down
+                ? KeyState.Pressed
+                : state;
+
+            _keyStates[key] = state;
+
             var mouseEvents = OnMouseEvent;
 
             if (mouseEvents != null)
                 Task.Factory.StartNew(() => { mouseEvents.Invoke(key, state, x, y); });
-
-            _keyStates[key] = state == KeyState.Up && GetState(key) == KeyState.Down
-                ? KeyState.Pressed
-                : state;
-
+            
             Task.Factory.StartNew(() =>
             {
                 List<KeyStateChangedEventHandler> curCallbacks = _keyStateChangedCallbacks[key];
@@ -213,14 +215,16 @@ namespace LowLevelInput.Hooks
         {
             if (key == VirtualKeyCode.Invalid) return;
 
+            state = state == KeyState.Down && _keyStates[key] == KeyState.Down
+                ? KeyState.Pressed
+                : state;
+
+            _keyStates[key] = state;
+
             var keyboardEvents = OnKeyboardEvent;
 
             if (keyboardEvents != null)
                 Task.Factory.StartNew(() => { keyboardEvents.Invoke(key, state); });
-
-            _keyStates[key] = state == KeyState.Up && GetState(key) == KeyState.Down
-                ? KeyState.Pressed
-                : state;
 
             Task.Factory.StartNew(() =>
             {
@@ -324,7 +328,9 @@ namespace LowLevelInput.Hooks
         /// </exception>
         public bool IsPressed(VirtualKeyCode key)
         {
-            return GetState(key) == KeyState.Down;
+            var state = GetState(key);
+
+            return state == KeyState.Down || state == KeyState.Pressed;
         }
 
         /// <summary>
@@ -338,13 +344,7 @@ namespace LowLevelInput.Hooks
         /// </exception>
         public bool WasPressed(VirtualKeyCode key)
         {
-            if (GetState(key) == KeyState.Pressed)
-            {
-                SetState(key, KeyState.Up);
-
-                return true;
-            }
-            return false;
+            return GetState(key) == KeyState.Pressed;
         }
 
         /// <summary>
