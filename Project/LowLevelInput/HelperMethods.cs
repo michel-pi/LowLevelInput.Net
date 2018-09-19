@@ -242,7 +242,7 @@ namespace LowLevelInput
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int SetBit(int num, int index, bool value)
+        public static int SetBit(int num, int index, bool value)
         {
             if(value)
             {
@@ -255,9 +255,9 @@ namespace LowLevelInput
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int HIWORD(int number)
+        public static ushort HIWORD(int number)
         {
-            return BitConverter.ToInt16(BitConverter.GetBytes(number), 2);
+            return (ushort)(((uint)number >> 16) & 0xFFFF);
         }
     }
 }

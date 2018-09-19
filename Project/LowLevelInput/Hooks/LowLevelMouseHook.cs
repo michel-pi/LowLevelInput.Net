@@ -124,11 +124,6 @@ namespace LowLevelInput.Hooks
             Dispose();
         }
 
-        private int HIWORD(int number)
-        {
-            return BitConverter.ToInt16(BitConverter.GetBytes(number), 2);
-        }
-
         private void Hook_OnHookCalled(IntPtr wParam, IntPtr lParam)
         {
             if (lParam == IntPtr.Zero) return;
@@ -220,7 +215,7 @@ namespace LowLevelInput.Hooks
 
                 case WindowsMessage.Xbuttondblclk:
                 case WindowsMessage.Ncxbuttondblclk:
-                    if (HIWORD(mouseData) == 0x1)
+                    if (HelperMethods.HIWORD(mouseData) == 0x1)
                     {
                         IsXButton1Pressed = true;
 
@@ -244,7 +239,7 @@ namespace LowLevelInput.Hooks
 
                 case WindowsMessage.Xbuttondown:
                 case WindowsMessage.Ncxbuttondown:
-                    if (HIWORD(mouseData) == 0x1)
+                    if (HelperMethods.HIWORD(mouseData) == 0x1)
                     {
                         IsXButton1Pressed = true;
 
@@ -260,7 +255,7 @@ namespace LowLevelInput.Hooks
 
                 case WindowsMessage.Xbuttonup:
                 case WindowsMessage.Ncxbuttonup:
-                    if (HIWORD(mouseData) == 0x1)
+                    if (HelperMethods.HIWORD(mouseData) == 0x1)
                     {
                         IsXButton1Pressed = false;
 
@@ -276,7 +271,7 @@ namespace LowLevelInput.Hooks
 
                 case WindowsMessage.Mousewheel:
                 case WindowsMessage.Mousehwheel:
-                    InvokeEventListeners(KeyState.None, VirtualKeyCode.Scroll, HIWORD(mouseData), HIWORD(mouseData));
+                    InvokeEventListeners(KeyState.None, VirtualKeyCode.Scroll, HelperMethods.HIWORD(mouseData), HelperMethods.HIWORD(mouseData));
 
                     break;
 

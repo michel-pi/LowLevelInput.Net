@@ -186,7 +186,7 @@ namespace LowLevelInput.Hooks
 
         private void _mouseHook_OnMouseEvent(VirtualKeyCode key, KeyState state, int x, int y)
         {
-            if (key == VirtualKeyCode.Invalid) return;
+            if (key == VirtualKeyCode.Invalid && !CaptureMouseMove) return;
 
             state = state == KeyState.Down && _keyStates[key] == KeyState.Down
                 ? KeyState.Pressed
@@ -197,7 +197,7 @@ namespace LowLevelInput.Hooks
             var mouseEvents = OnMouseEvent;
 
             if (mouseEvents != null)
-                Task.Factory.StartNew(() => { mouseEvents.Invoke(key, state, x, y); });
+                Task.Factory.StartNew(() => mouseEvents.Invoke(key, state, x, y));
             
             Task.Factory.StartNew(() =>
             {
@@ -224,7 +224,7 @@ namespace LowLevelInput.Hooks
             var keyboardEvents = OnKeyboardEvent;
 
             if (keyboardEvents != null)
-                Task.Factory.StartNew(() => { keyboardEvents.Invoke(key, state); });
+                Task.Factory.StartNew(() => keyboardEvents.Invoke(key, state));
 
             Task.Factory.StartNew(() =>
             {
@@ -328,7 +328,13 @@ namespace LowLevelInput.Hooks
         /// </exception>
         public bool IsPressed(VirtualKeyCode key)
         {
-            var state = GetState(key);
+            if (!IsInitialized)
+                throw new InvalidOperationException("The " + nameof(InputManager) +
+                                                    " needs to be initialized before it can execute this method.");
+
+            if (key == VirtualKeyCode.Invalid) return false;
+
+            var state = _keyStates[key];
 
             return state == KeyState.Down || state == KeyState.Pressed;
         }
@@ -344,7 +350,16 @@ namespace LowLevelInput.Hooks
         /// </exception>
         public bool WasPressed(VirtualKeyCode key)
         {
-            return GetState(key) == KeyState.Pressed;
+            var state = GetState(key);
+
+            if (state == KeyState.Down || state == KeyState.Pressed)
+            {
+                SetState(key, KeyState.Up);
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -366,6 +381,7 @@ namespace LowLevelInput.Hooks
 
             if (key == VirtualKeyCode.Invalid)
                 throw new ArgumentException("VirtualKeyCode.INVALID is not supported by this method.", nameof(key));
+
             if (handler == null) throw new ArgumentNullException(nameof(handler));
 
             lock (_lockObject)
@@ -394,6 +410,7 @@ namespace LowLevelInput.Hooks
 
             if (key == VirtualKeyCode.Invalid)
                 throw new ArgumentException("VirtualKeyCode.INVALID is not supported by this method.", nameof(key));
+
             if (handler == null) throw new ArgumentNullException(nameof(handler));
 
             lock (_lockObject)
