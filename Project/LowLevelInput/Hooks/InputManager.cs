@@ -41,11 +41,11 @@ namespace LowLevelInput.Hooks
         ///     Initializes a new instance of the <see cref="InputManager" /> class and it's hooks.
         /// </summary>
         /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
-        public InputManager(bool captureMouseMove)
+        public InputManager(bool captureMouseMove, bool installMouseHook = true)
         {
             _lockObject = new object();
 
-            Initialize(captureMouseMove, false);
+            Initialize(captureMouseMove, false, installMouseHook);
         }
 
         /// <summary>
@@ -53,11 +53,11 @@ namespace LowLevelInput.Hooks
         /// </summary>
         /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
         /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
-        public InputManager(bool captureMouseMove, bool clearInjectedFlag)
+        public InputManager(bool captureMouseMove, bool clearInjectedFlag, bool installMouseHook = true)
         {
             _lockObject = new object();
 
-            Initialize(captureMouseMove, clearInjectedFlag);
+            Initialize(captureMouseMove, clearInjectedFlag, installMouseHook);
         }
 
         /// <summary>
@@ -144,9 +144,9 @@ namespace LowLevelInput.Hooks
         /// <summary>
         ///     Initializes this instance.
         /// </summary>
-        public void Initialize()
+        public void Initialize(bool installMouseHook = true)
         {
-            Initialize(true, false);
+            Initialize(true, false, installMouseHook);
         }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace LowLevelInput.Hooks
         /// <param name="captureMouseMove">if set to <c>true</c> [capture mouse move].</param>
         /// <param name="clearInjectedFlag">if set to <c>true</c> [clear injected flag].</param>
         /// <exception cref="InvalidOperationException">The " + nameof(InputManager) + " is already initialized.</exception>
-        public void Initialize(bool captureMouseMove, bool clearInjectedFlag)
+        public void Initialize(bool captureMouseMove, bool clearInjectedFlag, bool installMouseHook)
         {
             lock (_lockObject)
             {
@@ -172,13 +172,15 @@ namespace LowLevelInput.Hooks
                 }
 
                 _keyboardHook = new LowLevelKeyboardHook(clearInjectedFlag);
-                _mouseHook = new LowLevelMouseHook(captureMouseMove, clearInjectedFlag);
-
                 _keyboardHook.OnKeyboardEvent += _keyboardHook_OnKeyboardEvent;
-                _mouseHook.OnMouseEvent += _mouseHook_OnMouseEvent;
-
                 _keyboardHook.InstallHook();
-                _mouseHook.InstallHook();
+
+                if (installMouseHook)
+                {
+                    _mouseHook = new LowLevelMouseHook(captureMouseMove, clearInjectedFlag);
+                    _mouseHook.OnMouseEvent += _mouseHook_OnMouseEvent;
+                    _mouseHook.InstallHook();
+                }
 
                 IsInitialized = true;
             }
