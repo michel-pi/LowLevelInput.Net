@@ -124,7 +124,7 @@ namespace LowLevelInput.Hooks
 
         protected virtual bool OnHookFilter(int code, IntPtr wParam, IntPtr lParam)
         {
-            bool? filter = HookFilter?.Invoke(code, wParam, lParam);
+            bool? filter = HookFilter?.Invoke(this, code, wParam, lParam);
 
             bool result = filter == null ? false : (bool)filter;
 

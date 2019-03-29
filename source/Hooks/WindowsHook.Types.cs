@@ -2,11 +2,11 @@
 
 namespace LowLevelInput.Hooks
 {
-    public delegate bool HookFilterCallback(int code, IntPtr wParam, IntPtr lParam);
+    public delegate bool HookFilterCallback(object sender, int code, IntPtr wParam, IntPtr lParam);
 
     public class HookCalledEventArgs : EventArgs
     {
-        public int Code { get; set; }
+        public int Code { get; private set; }
 
         public IntPtr WParam { get; private set; }
         public IntPtr LParam { get; private set; }
@@ -21,6 +21,39 @@ namespace LowLevelInput.Hooks
             Code = code;
             WParam = wParam;
             LParam = lParam;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var args = obj as HookCalledEventArgs;
+
+            if (args == null)
+            {
+                return false;
+            }
+            else
+            {
+                return args.Code == Code
+                    && args.LParam == LParam
+                    && args.WParam == WParam;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return OverrideHelper.HashCodes(
+                Code.GetHashCode(),
+                WParam.GetHashCode(),
+                LParam.GetHashCode());
+        }
+
+        public override string ToString()
+        {
+            return OverrideHelper.ToString(
+                "Code", Code.ToString(),
+                "WParam", WParam.ToString(),
+                "LParam", LParam.ToString()
+                );
         }
     }
 
