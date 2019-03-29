@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
+using LowLevelInput.Converters;
 using LowLevelInput.PInvoke;
 
 namespace LowLevelInput.Hooks
@@ -28,7 +29,7 @@ namespace LowLevelInput.Hooks
 
         public bool IsInstalled { get => _isInstalled; private set => _isInstalled = value; }
 
-        public WindowsHookType WindowsHookType { get; private set; }
+        public WindowsHookType HookType { get; private set; }
         
         public event EventHandler<HookCalledEventArgs> HookCalled;
         public event EventHandler<HookCalledEventArgs> HookCalledAsync;
@@ -46,7 +47,7 @@ namespace LowLevelInput.Hooks
         
         public WindowsHook(WindowsHookType type) : this()
         {
-            WindowsHookType = type;
+            HookType = type;
         }
 
         ~WindowsHook()
@@ -138,7 +139,7 @@ namespace LowLevelInput.Hooks
             _hookProc = WindowsHookProc;
             _hookProcAddress = Marshal.GetFunctionPointerForDelegate(_hookProc);
 
-            _hookHandle = User32.SetWindowsHookEx((int)WindowsHookType, _hookProcAddress, MainModuleHandle, 0);
+            _hookHandle = User32.SetWindowsHookEx((int)HookType, _hookProcAddress, MainModuleHandle, 0);
 
             if (_hookHandle == IntPtr.Zero)
             {
@@ -186,6 +187,46 @@ namespace LowLevelInput.Hooks
             Dispose();
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is WindowsHook value)
+            {
+                return value._isInstalled == _isInstalled
+                    && value._hookHandle == _hookHandle
+                    && value._hookProcAddress == _hookProcAddress
+                    && value._threadId == _threadId;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool Equals(WindowsHook value)
+        {
+            return value != null
+                && value._isInstalled == _isInstalled
+                && value._hookHandle == _hookHandle
+                && value._hookProcAddress == _hookProcAddress
+                && value._threadId == _threadId;
+        }
+
+        public override int GetHashCode()
+        {
+            return OverrideHelper.HashCodes(
+                _isInstalled.GetHashCode(),
+                _hookHandle.GetHashCode(),
+                _hookProc.GetHashCode(),
+                _threadId.GetHashCode());
+        }
+
+        public override string ToString()
+        {
+            return OverrideHelper.ToString(
+                "IsInstalled", IsInstalled.ToString(),
+                "WindowsHookType", HookTypeConverter.ToString(HookType));
+        }
+
         #region IDisposable Support
         private bool disposedValue = false;
 
@@ -210,5 +251,11 @@ namespace LowLevelInput.Hooks
             GC.SuppressFinalize(this);
         }
         #endregion
+
+        public static bool Equals(WindowsHook left, WindowsHook right)
+        {
+            return left != null
+                && left.Equals(right);
+        }
     }
 }

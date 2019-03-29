@@ -263,6 +263,42 @@ namespace LowLevelInput.Hooks
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is KeyboardHook value)
+            {
+                return value._clearInjectedFlag == _clearInjectedFlag
+                    && value._hook == null ? _hook == null : value._hook.Equals(_hook);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool Equals(KeyboardHook value)
+        {
+            return value != null
+                && value._clearInjectedFlag == _clearInjectedFlag
+                && value._hook == null ? _hook == null : value._hook.Equals(_hook);
+        }
+
+        public override int GetHashCode()
+        {
+            return OverrideHelper.HashCodes(
+                _clearInjectedFlag.GetHashCode(),
+                _hook == null ? 1 : _hook.GetHashCode());
+        }
+
+        public override string ToString()
+        {
+            return OverrideHelper.ToString(
+                "IsInstalled", IsInstalled.ToString(),
+                "ClearInjectedFlag", ClearInjectedFlag.ToString(),
+                "Capslock", Capslock.ToString(),
+                "IsShiftKeyDown", IsShiftKeyDown.ToString());
+        }
+
         protected virtual void OnKeyboardEvent(VirtualKeyCode key, KeyState state, bool capslock, bool isShiftKeyDown)
         {
             KeyboardEvent?.Invoke(this, new KeyboardHookEventArgs(key, state, capslock, isShiftKeyDown));
@@ -397,6 +433,12 @@ namespace LowLevelInput.Hooks
             GC.SuppressFinalize(this);
         }
         #endregion
+
+        public static bool Equals(KeyboardHook left, KeyboardHook right)
+        {
+            return left != null
+                && left.Equals(right);
+        }
 
         private static bool GetAsyncCapslockState()
         {

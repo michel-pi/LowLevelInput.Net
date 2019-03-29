@@ -67,6 +67,15 @@ namespace LowLevelInput.Hooks
             }
         }
 
+        public bool Equals(KeyboardHookEventArgs value)
+        {
+            return value != null
+                && value.Key == Key
+                && value.State == State
+                && value.Capslock == Capslock
+                && value.IsShiftKeyDown == IsShiftKeyDown;
+        }
+
         public override int GetHashCode()
         {
             return OverrideHelper.HashCodes(
@@ -82,6 +91,12 @@ namespace LowLevelInput.Hooks
                 "Key", KeyCodeConverter.ToString(Key),
                 "State", KeyStateConverter.ToString(State),
                 "IsUppercaseLetter", IsUppercaseLetter.ToString());
+        }
+
+        public static bool Equals(KeyboardHookEventArgs left, KeyboardHookEventArgs right)
+        {
+            return left != null
+                && left.Equals(right);
         }
     }
 }

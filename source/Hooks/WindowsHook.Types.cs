@@ -26,7 +26,7 @@ namespace LowLevelInput.Hooks
         public override bool Equals(object obj)
         {
             var args = obj as HookCalledEventArgs;
-
+            
             if (args == null)
             {
                 return false;
@@ -37,6 +37,14 @@ namespace LowLevelInput.Hooks
                     && args.LParam == LParam
                     && args.WParam == WParam;
             }
+        }
+
+        public bool Equals(HookCalledEventArgs value)
+        {
+            return value != null
+                && value.Code == Code
+                && value.LParam == LParam
+                && value.WParam == WParam;
         }
 
         public override int GetHashCode()
@@ -54,6 +62,12 @@ namespace LowLevelInput.Hooks
                 "WParam", WParam.ToString(),
                 "LParam", LParam.ToString()
                 );
+        }
+
+        public static bool Equals(HookCalledEventArgs left, HookCalledEventArgs right)
+        {
+            return left != null
+                && left.Equals(right);
         }
     }
 

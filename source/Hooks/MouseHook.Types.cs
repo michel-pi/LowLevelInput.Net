@@ -76,6 +76,16 @@ namespace LowLevelInput.Hooks
             }
         }
 
+        public bool Equals(MouseHookEventArgs value)
+        {
+            return value != null
+                && value.IsMouseMove == IsMouseMove
+                && value.X == X
+                && value.Y == Y
+                && value.Button == Button
+                && value.MouseWheelDelta == MouseWheelDelta;
+        }
+
         public override int GetHashCode()
         {
             return OverrideHelper.HashCodes(
@@ -96,6 +106,12 @@ namespace LowLevelInput.Hooks
                 "Button", KeyCodeConverter.ToString(Button),
                 "State", KeyStateConverter.ToString(State),
                 "MouseWheelDelta", MouseWheelDelta.ToString());
+        }
+
+        public static bool Equals(MouseHookEventArgs left, MouseHookEventArgs right)
+        {
+            return left != null
+                && left.Equals(right);
         }
     }
 }
