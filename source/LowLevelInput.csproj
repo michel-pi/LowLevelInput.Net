@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\HookTypeConverter.cs" />
     <Compile Include="Converters\KeyCodeConverter.cs" />
     <Compile Include="Converters\KeyStateConverter.cs" />
     <Compile Include="OverrideHelper.cs" />
