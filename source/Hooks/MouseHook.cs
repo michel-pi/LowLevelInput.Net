@@ -32,6 +32,12 @@ namespace LowLevelInput.Hooks
         public int MouseX => _mouseX;
         public int MouseY => _mouseY;
 
+        public bool IsLeftButtonDown => IsButtonDown(VirtualKeyCode.Lbutton);
+        public bool IsRightButtonDown => IsButtonDown(VirtualKeyCode.Rbutton);
+        public bool IsMiddleButtonDown => IsButtonDown(VirtualKeyCode.Mbutton);
+        public bool IsXButton1Down => IsButtonDown(VirtualKeyCode.Xbutton1);
+        public bool IsXButton2Down => IsButtonDown(VirtualKeyCode.Xbutton2);
+
         public WindowsHook Hook { get => _hook; private set => _hook = value; }
 
         public event EventHandler<MouseHookEventArgs> MouseEvent;
@@ -49,7 +55,8 @@ namespace LowLevelInput.Hooks
                 { VirtualKeyCode.Rbutton, KeyState.Up },
                 { VirtualKeyCode.Mbutton, KeyState.Up },
                 { VirtualKeyCode.Xbutton1, KeyState.Up },
-                { VirtualKeyCode.Xbutton2, KeyState.Up }
+                { VirtualKeyCode.Xbutton2, KeyState.Up },
+                { VirtualKeyCode.Scroll, KeyState.Up }
             };
 
             _registeredMouseEvents = new Dictionary<VirtualKeyCode, List<EventHandler<MouseHookEventArgs>>>();
@@ -97,6 +104,82 @@ namespace LowLevelInput.Hooks
                 _hook.HookFilter = null;
 
                 _hook.Uninstall();
+            }
+        }
+
+        public KeyState GetButtonState(VirtualKeyCode key)
+        {
+            switch (key)
+            {
+                case VirtualKeyCode.Lbutton:
+                case VirtualKeyCode.Rbutton:
+                case VirtualKeyCode.Mbutton:
+                case VirtualKeyCode.Xbutton1:
+                case VirtualKeyCode.Xbutton2:
+                case VirtualKeyCode.Scroll:
+                    var state = _buttonStates[key];
+                    if (state == KeyState.Pressed) _buttonStates[key] = KeyState.Up;
+                    return state;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(key));
+            }
+        }
+
+        public void SetButtonState(VirtualKeyCode key, KeyState state)
+        {
+            switch (key)
+            {
+                case VirtualKeyCode.Lbutton:
+                case VirtualKeyCode.Rbutton:
+                case VirtualKeyCode.Mbutton:
+                case VirtualKeyCode.Xbutton1:
+                case VirtualKeyCode.Xbutton2:
+                case VirtualKeyCode.Scroll:
+                    try
+                    {
+                        _buttonStates[key] = state;
+                    }
+                    catch
+                    {
+
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(key));
+            }
+        }
+
+        public bool IsButtonDown(VirtualKeyCode key)
+        {
+            switch (key)
+            {
+                case VirtualKeyCode.Lbutton:
+                case VirtualKeyCode.Rbutton:
+                case VirtualKeyCode.Mbutton:
+                case VirtualKeyCode.Xbutton1:
+                case VirtualKeyCode.Xbutton2:
+                case VirtualKeyCode.Scroll:
+                    var state = _buttonStates[key];
+                    if (state == KeyState.Pressed) _buttonStates[key] = KeyState.Up;
+                    return state == KeyState.Down || state == KeyState.Pressed;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(key));
+            }
+        }
+
+        public bool IsButtonUp(VirtualKeyCode key)
+        {
+            switch (key)
+            {
+                case VirtualKeyCode.Lbutton:
+                case VirtualKeyCode.Rbutton:
+                case VirtualKeyCode.Mbutton:
+                case VirtualKeyCode.Xbutton1:
+                case VirtualKeyCode.Xbutton2:
+                case VirtualKeyCode.Scroll:
+                    return _buttonStates[key] == KeyState.Up;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(key));
             }
         }
 
@@ -149,17 +232,71 @@ namespace LowLevelInput.Hooks
             });
         }
         
-        private void _hook_HookCalled(object sender, HookCalledEventArgs e)
+        private void ResetButtonPressedStates()
         {
-            if (e.WParam == IntPtr.Zero || e.LParam == IntPtr.Zero) return;
-            
+            try
+            {
+                if (_buttonStates[VirtualKeyCode.Scroll] == KeyState.Pressed) _buttonStates[VirtualKeyCode.Scroll] = KeyState.Up;
+            }
+            catch
+            {
+
+            }
         }
 
-        private bool _hook_filterCallback(object sender, int code, IntPtr wParam, IntPtr lParam)
+        private void _hook_HookCalled(object sender, HookCalledEventArgs e)
         {
-            if (wParam == IntPtr.Zero || lParam == IntPtr.Zero) return false;
+            var eventData = GetMouseHookEventArgs(e.WParam, e.LParam);
+            
+            if (eventData == null)
+            {
+                return;
+            }
+            else
+            {
+                ResetButtonPressedStates();
 
-            return false;
+                if (_clearInjectedFlag)
+                {
+                    ClearInjectedFlagHelper(e.LParam);
+                }
+
+                if (eventData.IsMouseMove)
+                {
+                    _mouseX = eventData.X;
+                    _mouseY = eventData.Y;
+                }
+
+                if (eventData.State != KeyState.None && eventData.Button != VirtualKeyCode.Invalid)
+                {
+                    SetButtonState(eventData.Button, eventData.State);
+                }
+                
+                if (eventData.IsMouseMove && !CaptureMouseMove)
+                {
+                    return;
+                }
+                else
+                {
+                    OnMouseEventAsync(eventData);
+                    OnMouseEvent(eventData);
+                    OnFireRegisteredEvents(eventData);
+                }
+            }
+        }
+
+        private bool _hook_filterCallback(object sender, HookCalledEventArgs e)
+        {
+            var eventData = GetMouseHookEventArgs(e.WParam, e.LParam);
+
+            if (eventData == null)
+            {
+                return false;
+            }
+            else
+            {
+                return OnMouseFilter(eventData);
+            }
         }
 
         #region IDisposable Support
@@ -184,6 +321,141 @@ namespace LowLevelInput.Hooks
             GC.SuppressFinalize(this);
         }
         #endregion
+        
+        private static MouseHookEventArgs GetMouseHookEventArgs(IntPtr wParam, IntPtr lParam)
+        {
+            if (lParam == IntPtr.Zero) return null;
+
+            VirtualKeyCode button = VirtualKeyCode.Invalid;
+            KeyState state = KeyState.None;
+            int mouseWheelDelta = 0;
+            bool isMouseMove = false;
+
+            var msg = (WindowMessage)(uint)wParam.ToInt32();
+
+            int x = 0;
+            int y = 0;
+
+            switch (msg)
+            {
+                case WindowMessage.Lbuttondblclk:
+                case WindowMessage.Nclbuttondblclk:
+                    button = VirtualKeyCode.Lbutton;
+                    state = KeyState.Pressed;
+                    break;
+
+                case WindowMessage.Lbuttondown:
+                case WindowMessage.Nclbuttondown:
+                    button = VirtualKeyCode.Lbutton;
+                    state = KeyState.Down;
+                    break;
+
+                case WindowMessage.Lbuttonup:
+                case WindowMessage.Nclbuttonup:
+                    button = VirtualKeyCode.Lbutton;
+                    state = KeyState.Up;
+                    break;
+
+                case WindowMessage.Mbuttondblclk:
+                case WindowMessage.Ncmbuttondblclk:
+                    button = VirtualKeyCode.Mbutton;
+                    state = KeyState.Pressed;
+                    break;
+
+                case WindowMessage.Mbuttondown:
+                case WindowMessage.Ncmbuttondown:
+                    button = VirtualKeyCode.Mbutton;
+                    state = KeyState.Down;
+                    break;
+
+                case WindowMessage.Mbuttonup:
+                case WindowMessage.Ncmbuttonup:
+                    button = VirtualKeyCode.Mbutton;
+                    state = KeyState.Up;
+                    break;
+
+                case WindowMessage.Rbuttondblclk:
+                case WindowMessage.Ncrbuttondblclk:
+                    button = VirtualKeyCode.Rbutton;
+                    state = KeyState.Pressed;
+                    break;
+
+                case WindowMessage.Rbuttondown:
+                case WindowMessage.Ncrbuttondown:
+                    button = VirtualKeyCode.Rbutton;
+                    state = KeyState.Down;
+                    break;
+
+                case WindowMessage.Rbuttonup:
+                case WindowMessage.Ncrbuttonup:
+                    button = VirtualKeyCode.Rbutton;
+                    state = KeyState.Up;
+                    break;
+
+                case WindowMessage.Xbuttondblclk:
+                case WindowMessage.Ncxbuttondblclk:
+                    if (HIWORD(Marshal.ReadInt32(lParam, 8)) == 0x1)
+                    {
+                        button = VirtualKeyCode.Xbutton1;
+                        state = KeyState.Pressed;
+                    }
+                    else
+                    {
+                        button = VirtualKeyCode.Xbutton2;
+                        state = KeyState.Pressed;
+                    }
+                    break;
+
+                case WindowMessage.Xbuttondown:
+                case WindowMessage.Ncxbuttondown:
+                    if (HIWORD(Marshal.ReadInt32(lParam, 8)) == 0x1)
+                    {
+                        button = VirtualKeyCode.Xbutton1;
+                        state = KeyState.Down;
+                    }
+                    else
+                    {
+                        button = VirtualKeyCode.Xbutton2;
+                        state = KeyState.Down;
+                    }
+                    break;
+
+                case WindowMessage.Xbuttonup:
+                case WindowMessage.Ncxbuttonup:
+                    if (HIWORD(Marshal.ReadInt32(lParam, 8)) == 0x1)
+                    {
+                        button = VirtualKeyCode.Xbutton1;
+                        state = KeyState.Up;
+                    }
+                    else
+                    {
+                        button = VirtualKeyCode.Xbutton2;
+                        state = KeyState.Up;
+                    }
+                    break;
+
+                case WindowMessage.Mousewheel:
+                case WindowMessage.Mousehwheel:
+                    button = VirtualKeyCode.Scroll;
+                    state = KeyState.Pressed;
+                    mouseWheelDelta = HIWORD(Marshal.ReadInt32(lParam, 8));
+                    break;
+
+                case WindowMessage.Mousemove:
+                case WindowMessage.Ncmousemove:
+                    isMouseMove = true;
+
+                    x = Marshal.ReadInt32(lParam);
+                    y = Marshal.ReadInt32(lParam, 4);
+                    break;
+                default:
+                    return null;
+            }
+
+            return isMouseMove
+                ? new MouseHookEventArgs(x, y, button, state, mouseWheelDelta)
+                : new MouseHookEventArgs(button, state, mouseWheelDelta);
+        }
 
         private static void ClearInjectedFlagHelper(IntPtr lParam)
         {
@@ -192,9 +464,9 @@ namespace LowLevelInput.Hooks
             Marshal.WriteInt32(lParam, 12, 0);
         }
 
-        private static ushort HIWORD(int number)
+        private static short HIWORD(int number)
         {
-            return (ushort)(((uint)number >> 16) & 0xFFFF);
+            return (short)((number >> 16) & 0xFFFF);
         }
     }
 }

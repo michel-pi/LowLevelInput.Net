@@ -2,7 +2,7 @@
 
 namespace LowLevelInput.Hooks
 {
-    public delegate bool HookFilterCallback(object sender, int code, IntPtr wParam, IntPtr lParam);
+    public delegate bool HookFilterCallback(object sender, HookCalledEventArgs e);
 
     public class HookCalledEventArgs : EventArgs
     {

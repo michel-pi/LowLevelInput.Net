@@ -6,18 +6,6 @@ namespace LowLevelInput.PInvoke
     [UnmanagedFunctionPointer(CallingConvention.StdCall, CharSet = CharSet.Unicode)]
     public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
-    //[StructLayout(LayoutKind.Sequential)]
-    //internal struct Message
-    //{
-    //    public IntPtr Hwnd;
-    //    public IntPtr lParam;
-    //    public WindowMessage Msg;
-    //    public uint Time;
-    //    public IntPtr wParam;
-    //    public int X;
-    //    public int Y;
-    //}
-
     [StructLayout(LayoutKind.Sequential)]
     internal struct Message
     {

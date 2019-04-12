@@ -11,6 +11,8 @@ namespace LowLevelInput.Hooks
 {
     public class WindowsHook : IDisposable
     {
+        private const WindowMessage CustomDestroyWindowMessage = (WindowMessage)0x1337;
+
         private static readonly IntPtr MainModuleHandle = Process.GetCurrentProcess().MainModule.BaseAddress;
 
         private readonly object _lock;
@@ -18,7 +20,7 @@ namespace LowLevelInput.Hooks
         private volatile Exception _exception;
 
         private volatile IntPtr _hookHandle;
-
+        
         private volatile HookProc _hookProc;
         private volatile IntPtr _hookProcAddress;
 
@@ -32,7 +34,6 @@ namespace LowLevelInput.Hooks
         public WindowsHookType HookType { get; private set; }
         
         public event EventHandler<HookCalledEventArgs> HookCalled;
-        public event EventHandler<HookCalledEventArgs> HookCalledAsync;
 
         // return if this call should be filtered
         public HookFilterCallback HookFilter;
@@ -63,9 +64,9 @@ namespace LowLevelInput.Hooks
 
                 _thread = new Thread(WindowsHookThread)
                 {
-                    IsBackground = true
+                    IsBackground = false
                 };
-
+                
                 _thread.Start();
 
                 while (!IsInstalled)
@@ -92,7 +93,7 @@ namespace LowLevelInput.Hooks
 
                 _exception = null;
 
-                User32.PostThreadMessage(_threadId, WindowMessage.Quit, IntPtr.Zero, IntPtr.Zero);
+                User32.PostThreadMessage(_threadId, CustomDestroyWindowMessage, IntPtr.Zero, IntPtr.Zero);
 
                 while (IsInstalled)
                 {
@@ -109,84 +110,7 @@ namespace LowLevelInput.Hooks
                 }
             }
         }
-
-        protected virtual void OnHookCalled(int code, IntPtr wParam, IntPtr lParam)
-        {
-            HookCalled?.Invoke(this, new HookCalledEventArgs(code, wParam, lParam));
-        }
-
-        protected virtual void OnHookCalledAsync(int code, IntPtr wParam, IntPtr lParam)
-        {
-            Task.Factory.StartNew(() =>
-            {
-                HookCalledAsync?.Invoke(this, new HookCalledEventArgs(code, wParam, lParam));
-            });
-        }
-
-        protected virtual bool OnHookFilter(int code, IntPtr wParam, IntPtr lParam)
-        {
-            bool? filter = HookFilter?.Invoke(this, code, wParam, lParam);
-
-            bool result = filter == null ? false : (bool)filter;
-
-            return result;
-        }
-
-        private void WindowsHookThread()
-        {
-            _threadId = Kernel32.GetCurrentThreadId();
-
-            _hookProc = WindowsHookProc;
-            _hookProcAddress = Marshal.GetFunctionPointerForDelegate(_hookProc);
-
-            _hookHandle = User32.SetWindowsHookEx((int)HookType, _hookProcAddress, MainModuleHandle, 0);
-
-            if (_hookHandle == IntPtr.Zero)
-            {
-                _exception = new Exception("Failed to install " + nameof(WindowsHook) + ".");
-
-                return;
-            }
-
-            IsInstalled = true;
-
-            var msg = new Message();
-
-            while (User32.GetMessage(ref msg, IntPtr.Zero, 0, 0) != 0)
-            {
-                if (msg.WindowMessage == WindowMessage.Quit) break;
-            }
-
-            User32.UnhookWindowsHookEx(_hookHandle);
-            
-            IsInstalled = false;
-        }
-
-        private IntPtr WindowsHookProc(int code, IntPtr wParam, IntPtr lParam)
-        {
-            // contains a message
-            if (code >= 0)
-            {
-                // some hooks may not have a message if the code is not 0
-                if (OnHookFilter(code, wParam, lParam))
-                {
-                    return (IntPtr)(-1);
-                }
-                else
-                {
-                    OnHookCalledAsync(code, wParam, lParam);
-                    OnHookCalled(code, wParam, lParam);
-                }
-            }
-
-            return User32.CallNextHookEx(_hookHandle, code, wParam, lParam);
-        }
-
-        private void UnhookGuard_UnhookGuardEvent(object sender, UnhookGuardEventArgs e)
-        {
-            Dispose();
-        }
-
+        
         public override bool Equals(object obj)
         {
             if (obj is WindowsHook value)
@@ -225,6 +149,99 @@ namespace LowLevelInput.Hooks
             return OverrideHelper.ToString(
                 "IsInstalled", IsInstalled.ToString(),
                 "WindowsHookType", HookTypeConverter.ToString(HookType));
+        }
+
+        protected virtual void OnHookCalled(int code, IntPtr wParam, IntPtr lParam)
+        {
+            HookCalled?.Invoke(this, new HookCalledEventArgs(code, wParam, lParam));
+        }
+
+        protected virtual bool OnHookFilter(int code, IntPtr wParam, IntPtr lParam)
+        {
+            bool? filter = HookFilter?.Invoke(this, new HookCalledEventArgs(code, wParam, lParam));
+
+            bool result = filter == null ? false : (bool)filter;
+
+            return result;
+        }
+        
+        private void WindowsHookThread()
+        {
+            Thread.BeginThreadAffinity();
+            
+            _threadId = Kernel32.GetCurrentThreadId();
+
+            _hookProc = WindowsHookProc;
+            _hookProcAddress = Marshal.GetFunctionPointerForDelegate(_hookProc);
+
+            _hookHandle = User32.SetWindowsHookEx((int)HookType, _hookProcAddress, MainModuleHandle, 0);
+
+            if (_hookHandle == IntPtr.Zero)
+            {
+                _exception = new Exception("Failed to install " + nameof(WindowsHook) + ".");
+
+                return;
+            }
+
+            IsInstalled = true;
+
+            var msg = default(Message);
+
+            while (true)
+            {
+                var result = User32.GetMessage(ref msg, IntPtr.Zero, 0, 0);
+                
+                if (result == -1)
+                {
+                    break;
+                }
+                else if (result != 0)
+                {
+                    if (msg.WindowMessage == CustomDestroyWindowMessage)
+                    {
+                        break;
+                    }
+
+                    User32.TranslateMessage(ref msg);
+                    User32.DispatchMessage(ref msg);
+
+                    if (msg.WindowMessage == WindowMessage.Quit)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            User32.UnhookWindowsHookEx(_hookHandle);
+
+            IsInstalled = false;
+
+            Thread.EndThreadAffinity();
+        }
+
+        [AllowReversePInvokeCalls]
+        private IntPtr WindowsHookProc(int code, IntPtr wParam, IntPtr lParam)
+        {
+            // contains a message
+            if (code >= 0)
+            {
+                // some hooks may not have a message if the code is not 0
+                if (OnHookFilter(code, wParam, lParam))
+                {
+                    return (IntPtr)(-1);
+                }
+                else
+                {
+                    OnHookCalled(code, wParam, lParam);
+                }
+            }
+            
+            return User32.CallNextHookEx(_hookHandle, code, wParam, lParam);
+        }
+
+        private void UnhookGuard_UnhookGuardEvent(object sender, UnhookGuardEventArgs e)
+        {
+            Dispose();
         }
 
         #region IDisposable Support

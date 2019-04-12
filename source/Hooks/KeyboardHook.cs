@@ -368,10 +368,10 @@ namespace LowLevelInput.Hooks
                 case WindowMessage.ImeKeydown:
                 case WindowMessage.Syskeydown:
                     _keyStates[key] = _keyStates[key] == KeyState.Down ? KeyState.Pressed : KeyState.Down;
-
-                    OnFireRegisteredEvents(key, KeyState.Down, Capslock, IsShiftKeyDown);
+                    
                     OnKeyboardEventAsync(key, KeyState.Down, Capslock, IsShiftKeyDown);
                     OnKeyboardEvent(key, KeyState.Down, Capslock, IsShiftKeyDown);
+                    OnFireRegisteredEvents(key, KeyState.Down, Capslock, IsShiftKeyDown);
                     break;
                 case WindowMessage.Keyup:
                 case WindowMessage.ImeKeyup:
@@ -382,20 +382,20 @@ namespace LowLevelInput.Hooks
                     {
                         Capslock = !Capslock;
                     }
-
-                    OnFireRegisteredEvents(key, KeyState.Up, Capslock, IsShiftKeyDown);
+                    
                     OnKeyboardEventAsync(key, KeyState.Up, Capslock, IsShiftKeyDown);
                     OnKeyboardEvent(key, KeyState.Up, Capslock, IsShiftKeyDown);
+                    OnFireRegisteredEvents(key, KeyState.Up, Capslock, IsShiftKeyDown);
                     break;
             }
         }
 
-        private bool _hook_filterCallback(object sender, int code, IntPtr wParam, IntPtr lParam)
+        private bool _hook_filterCallback(object sender, HookCalledEventArgs e)
         {
-            if (wParam == IntPtr.Zero || lParam == IntPtr.Zero) return false;
+            if (e.WParam == IntPtr.Zero || e.LParam == IntPtr.Zero) return false;
 
-            var msg = (WindowMessage)wParam.ToInt32();
-            var key = (VirtualKeyCode)Marshal.ReadInt32(lParam);
+            var msg = (WindowMessage)e.WParam.ToInt32();
+            var key = (VirtualKeyCode)Marshal.ReadInt32(e.LParam);
 
             bool isKeyDown = false;
 
