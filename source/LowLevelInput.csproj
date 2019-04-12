@@ -49,6 +49,7 @@
     <Compile Include="Converters\HookTypeConverter.cs" />
     <Compile Include="Converters\KeyCodeConverter.cs" />
     <Compile Include="Converters\KeyStateConverter.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="OverrideHelper.cs" />
     <Compile Include="Hooks\KeyboardHook.cs" />
     <Compile Include="Hooks\MouseHook.Types.cs" />
