@@ -1,0 +1,1001 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LowLevelInput</name>
+    </assembly>
+    <members>
+        <member name="T:LowLevelInput.Hooks.KeyState">
+            <summary>
+                Defines the state of a key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.KeyState.None">
+            <summary>
+                None
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.KeyState.Up">
+            <summary>
+                Up
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.KeyState.Down">
+            <summary>
+                Down
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.KeyState.Pressed">
+            <summary>
+                Pressed
+            </summary>
+        </member>
+        <member name="T:LowLevelInput.Hooks.VirtualKeyCode">
+            <summary>
+                An enumeration of all VirtualKeyCodes on Windows
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Invalid">
+            <summary>
+                The invalid
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Hotkey">
+            <summary>
+                The hotkey
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Lbutton">
+            <summary>
+                Left mouse button
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Rbutton">
+            <summary>
+                Right mouse button
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Cancel">
+            <summary>
+                Control-break processing
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Mbutton">
+            <summary>
+                Middle mouse button (three-button mouse)
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Xbutton1">
+            <summary>
+                Windows 2000/XP: X1 mouse button
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Xbutton2">
+            <summary>
+                Windows 2000/XP: X2 mouse button
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Back">
+            <summary>
+                BACKSPACE key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Tab">
+            <summary>
+                TAB key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Clear">
+            <summary>
+                CLEAR key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Return">
+            <summary>
+                ENTER key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Shift">
+            <summary>
+                SHIFT key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Control">
+            <summary>
+                CTRL key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Menu">
+            <summary>
+                ALT key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Pause">
+            <summary>
+                PAUSE key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Capital">
+            <summary>
+                CAPS LOCK key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Kana">
+            <summary>
+                Input Method Editor (IME) Kana mode
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Hangul">
+            <summary>
+                IME Hangul mode
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Junja">
+            <summary>
+                IME Junja mode
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Final">
+            <summary>
+                IME final mode
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Hanja">
+            <summary>
+                IME Hanja mode
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Kanji">
+            <summary>
+                IME Kanji mode
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Escape">
+            <summary>
+                ESC key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Convert">
+            <summary>
+                IME convert
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Nonconvert">
+            <summary>
+                IME nonconvert
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Accept">
+            <summary>
+                IME accept
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Modechange">
+            <summary>
+                IME mode change request
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Space">
+            <summary>
+                SPACEBAR
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Prior">
+            <summary>
+                PAGE UP key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Next">
+            <summary>
+                PAGE DOWN key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.End">
+            <summary>
+                END key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Home">
+            <summary>
+                HOME key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Left">
+            <summary>
+                LEFT ARROW key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Up">
+            <summary>
+                UP ARROW key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Right">
+            <summary>
+                RIGHT ARROW key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Down">
+            <summary>
+                DOWN ARROW key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Select">
+            <summary>
+                SELECT key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Print">
+            <summary>
+                PRINT key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Execute">
+            <summary>
+                EXECUTE key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Snapshot">
+            <summary>
+                PRINT SCREEN key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Insert">
+            <summary>
+                INS key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Delete">
+            <summary>
+                DEL key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Help">
+            <summary>
+                HELP key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Zero">
+            <summary>
+                0 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.One">
+            <summary>
+                1 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Two">
+            <summary>
+                2 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Three">
+            <summary>
+                3 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Four">
+            <summary>
+                4 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Five">
+            <summary>
+                5 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Six">
+            <summary>
+                6 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Seven">
+            <summary>
+                7 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Eight">
+            <summary>
+                8 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Nine">
+            <summary>
+                9 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.A">
+            <summary>
+                A key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.B">
+            <summary>
+                B key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.C">
+            <summary>
+                C key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.D">
+            <summary>
+                D key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.E">
+            <summary>
+                E key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F">
+            <summary>
+                F key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.G">
+            <summary>
+                G key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.H">
+            <summary>
+                H key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.I">
+            <summary>
+                I key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.J">
+            <summary>
+                J key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.K">
+            <summary>
+                K key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.L">
+            <summary>
+                L key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.M">
+            <summary>
+                M key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.N">
+            <summary>
+                N key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.O">
+            <summary>
+                O key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.P">
+            <summary>
+                P key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Q">
+            <summary>
+                Q key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.R">
+            <summary>
+                R key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.S">
+            <summary>
+                S key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.T">
+            <summary>
+                T key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.U">
+            <summary>
+                U key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.V">
+            <summary>
+                V key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.W">
+            <summary>
+                W key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.X">
+            <summary>
+                X key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Y">
+            <summary>
+                Y key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Z">
+            <summary>
+                Z key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Lwin">
+            <summary>
+                Left Windows key (Microsoft Natural keyboard)
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Rwin">
+            <summary>
+                Right Windows key (Natural keyboard)
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Apps">
+            <summary>
+                Applications key (Natural keyboard)
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Sleep">
+            <summary>
+                Computer Sleep key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad0">
+            <summary>
+                Numeric keypad 0 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad1">
+            <summary>
+                Numeric keypad 1 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad2">
+            <summary>
+                Numeric keypad 2 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad3">
+            <summary>
+                Numeric keypad 3 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad4">
+            <summary>
+                Numeric keypad 4 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad5">
+            <summary>
+                Numeric keypad 5 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad6">
+            <summary>
+                Numeric keypad 6 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad7">
+            <summary>
+                Numeric keypad 7 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad8">
+            <summary>
+                Numeric keypad 8 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numpad9">
+            <summary>
+                Numeric keypad 9 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Multiply">
+            <summary>
+                Multiply key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Add">
+            <summary>
+                Add key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Separator">
+            <summary>
+                Separator key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Subtract">
+            <summary>
+                Subtract key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Decimal">
+            <summary>
+                Decimal key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Divide">
+            <summary>
+                Divide key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F1">
+            <summary>
+                F1 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F2">
+            <summary>
+                F2 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F3">
+            <summary>
+                F3 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F4">
+            <summary>
+                F4 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F5">
+            <summary>
+                F5 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F6">
+            <summary>
+                F6 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F7">
+            <summary>
+                F7 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F8">
+            <summary>
+                F8 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F9">
+            <summary>
+                F9 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F10">
+            <summary>
+                F10 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F11">
+            <summary>
+                F11 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F12">
+            <summary>
+                F12 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F13">
+            <summary>
+                F13 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F14">
+            <summary>
+                F14 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F15">
+            <summary>
+                F15 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F16">
+            <summary>
+                F16 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F17">
+            <summary>
+                F17 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F18">
+            <summary>
+                F18 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F19">
+            <summary>
+                F19 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F20">
+            <summary>
+                F20 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F21">
+            <summary>
+                F21 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F22">
+            <summary>
+                F22 key, (PPC only) Key used to lock device.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F23">
+            <summary>
+                F23 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.F24">
+            <summary>
+                F24 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Numlock">
+            <summary>
+                NUM LOCK key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Scroll">
+            <summary>
+                SCROLL LOCK key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Lshift">
+            <summary>
+                Left SHIFT key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Rshift">
+            <summary>
+                Right SHIFT key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Lcontrol">
+            <summary>
+                Left CONTROL key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Rcontrol">
+            <summary>
+                Right CONTROL key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Lmenu">
+            <summary>
+                Left MENU key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Rmenu">
+            <summary>
+                Right MENU key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.BrowserBack">
+            <summary>
+                Windows 2000/XP: Browser Back key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.BrowserForward">
+            <summary>
+                Windows 2000/XP: Browser Forward key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.BrowserRefresh">
+            <summary>
+                Windows 2000/XP: Browser Refresh key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.BrowserStop">
+            <summary>
+                Windows 2000/XP: Browser Stop key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.BrowserSearch">
+            <summary>
+                Windows 2000/XP: Browser Search key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.BrowserFavorites">
+            <summary>
+                Windows 2000/XP: Browser Favorites key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.BrowserHome">
+            <summary>
+                Windows 2000/XP: Browser Start and Home key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.VolumeMute">
+            <summary>
+                Windows 2000/XP: Volume Mute key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.VolumeDown">
+            <summary>
+                Windows 2000/XP: Volume Down key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.VolumeUp">
+            <summary>
+                Windows 2000/XP: Volume Up key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.MediaNextTrack">
+            <summary>
+                Windows 2000/XP: Next Track key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.MediaPrevTrack">
+            <summary>
+                Windows 2000/XP: Previous Track key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.MediaStop">
+            <summary>
+                Windows 2000/XP: Stop Media key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.MediaPlayPause">
+            <summary>
+                Windows 2000/XP: Play/Pause Media key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.LaunchMail">
+            <summary>
+                Windows 2000/XP: Start Mail key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.LaunchMediaSelect">
+            <summary>
+                Windows 2000/XP: Select Media key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.LaunchApp1">
+            <summary>
+                Windows 2000/XP: Start Application 1 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.LaunchApp2">
+            <summary>
+                Windows 2000/XP: Start Application 2 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem1">
+            <summary>
+                Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.OemPlus">
+            <summary>
+                Windows 2000/XP: For any country/region, the '+' key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.OemComma">
+            <summary>
+                Windows 2000/XP: For any country/region, the ',' key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.OemMinus">
+            <summary>
+                Windows 2000/XP: For any country/region, the '-' key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.OemPeriod">
+            <summary>
+                Windows 2000/XP: For any country/region, the '.' key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem2">
+            <summary>
+                Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem3">
+            <summary>
+                Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem4">
+            <summary>
+                Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem5">
+            <summary>
+                Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem6">
+            <summary>
+                Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem7">
+            <summary>
+                Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem8">
+            <summary>
+                Used for miscellaneous characters; it can vary by keyboard.
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Oem102">
+            <summary>
+                Windows 2000/XP: Either the angle bracket key or the backslash key on the RT 102-key keyboard
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Processkey">
+            <summary>
+                Windows 95/98/Me, Windows NT 4.0, Windows 2000/XP: IME PROCESS key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Packet">
+            <summary>
+                Windows 2000/XP: Used to pass Unicode characters as if they were keystrokes.
+                The VK_PACKET key is the low word of a 32-bit Virtual Key value used for non-keyboard input methods. For more
+                information,
+                see Remark in KEYBDINPUT, SendInput, WM_KEYDOWN, and WM_KEYUP
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Attn">
+            <summary>
+                Attn key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Crsel">
+            <summary>
+                CrSel key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Exsel">
+            <summary>
+                ExSel key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Ereof">
+            <summary>
+                Erase EOF key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Play">
+            <summary>
+                Play key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Zoom">
+            <summary>
+                Zoom key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Noname">
+            <summary>
+                Reserved
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Pa1">
+            <summary>
+                PA1 key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.OemClear">
+            <summary>
+                Clear key
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.VirtualKeyCode.Max">
+            <summary>
+                Highest possible key
+            </summary>
+        </member>
+        <member name="T:LowLevelInput.Hooks.WindowsHookType">
+            <summary>
+                An enumeration of all WindowsHook types
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.MsgFilter">
+            <summary>
+                The MSG filter
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.JournalRecord">
+            <summary>
+                The journal record
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.JournalPlayback">
+            <summary>
+                The journal playback
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.Keyboard">
+            <summary>
+                The keyboard
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.GetMessage">
+            <summary>
+                The get message
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.CallWndProc">
+            <summary>
+                The call WND proc
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.Cbt">
+            <summary>
+                The CBT
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.SysMsgFilter">
+            <summary>
+                The system MSG filter
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.Mouse">
+            <summary>
+                The mouse
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.Undocumented">
+            <summary>
+                The undocumented
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.Debug">
+            <summary>
+                The debug
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.Shell">
+            <summary>
+                The shell
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.ForegroundIdle">
+            <summary>
+                The foreground idle
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.CallWndProcRet">
+            <summary>
+                The call WND proc ret
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.LowLevelKeyboard">
+            <summary>
+                The low level keyboard
+            </summary>
+        </member>
+        <member name="F:LowLevelInput.Hooks.WindowsHookType.LowLevelMouse">
+            <summary>
+                The low level mouse
+            </summary>
+        </member>
+    </members>
+</doc>
