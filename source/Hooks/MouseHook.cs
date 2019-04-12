@@ -21,8 +21,8 @@ namespace LowLevelInput.Hooks
         private volatile int _mouseX;
         private volatile int _mouseY;
 
-        private Dictionary<VirtualKeyCode, KeyState> _buttonStates;
-        private Dictionary<VirtualKeyCode, List<EventHandler<MouseHookEventArgs>>> _registeredMouseEvents;
+        private readonly Dictionary<VirtualKeyCode, KeyState> _buttonStates;
+        private readonly Dictionary<VirtualKeyCode, List<EventHandler<MouseHookEventArgs>>> _registeredMouseEvents;
         
         public bool IsInstalled => _hook == null ? false : _hook.IsInstalled;
 
@@ -122,6 +122,206 @@ namespace LowLevelInput.Hooks
                     return state;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(key));
+            }
+        }
+
+        public VirtualKeyCode GetNextPressedButton(int timeout = -1)
+        {
+            var threadLock = new object();
+            var button = VirtualKeyCode.Invalid;
+
+            MouseEventAsync += localEventHandler;
+
+            bool result = false;
+
+            Monitor.Enter(threadLock);
+
+            if (timeout < 0)
+            {
+                Monitor.Wait(threadLock);
+                result = true;
+            }
+            else
+            {
+                result = Monitor.Wait(threadLock, timeout);
+            }
+
+            Monitor.Exit(threadLock);
+
+            MouseEventAsync -= localEventHandler;
+
+            if (result)
+            {
+                return button;
+            }
+            else
+            {
+                return VirtualKeyCode.Invalid;
+            }
+
+            void localEventHandler(object sender, MouseHookEventArgs e)
+            {
+                if (e.IsMouseMove) return;
+
+                if (e.State == KeyState.Down)
+                {
+                    button = e.Button;
+
+                    if (!Monitor.TryEnter(threadLock)) return;
+
+                    Monitor.PulseAll(threadLock);
+                    Monitor.Exit(threadLock);
+                }
+            }
+        }
+
+        public bool WaitForEvent(VirtualKeyCode button, KeyState state = KeyState.None, int timeout = -1)
+        {
+            if (button < VirtualKeyCode.Invalid || button > VirtualKeyCode.Max) throw new ArgumentOutOfRangeException(nameof(button));
+            if (state < KeyState.None || state > KeyState.Pressed) throw new ArgumentOutOfRangeException(nameof(state));
+
+            if (state == KeyState.Pressed) state = KeyState.Down;
+
+            var threadLock = new object();
+
+            MouseEventAsync += localEventHandler;
+
+            bool result = false;
+
+            Monitor.Enter(threadLock);
+
+            if (timeout < 0)
+            {
+                Monitor.Wait(threadLock);
+                result = true;
+            }
+            else
+            {
+                result = Monitor.Wait(threadLock, timeout);
+            }
+
+            Monitor.Exit(threadLock);
+
+            MouseEventAsync -= localEventHandler;
+
+            return result;
+
+            void localEventHandler(object sender, MouseHookEventArgs e)
+            {
+                if (e.Button != button) return;
+                if (state != e.State && state != KeyState.None) return;
+
+                if (!Monitor.TryEnter(threadLock)) return;
+
+                Monitor.PulseAll(threadLock);
+                Monitor.Exit(threadLock);
+            }
+        }
+
+        public bool WaitForEvent(int x, int y, VirtualKeyCode button, KeyState state = KeyState.None, int timeout = -1)
+        {
+            if (button < VirtualKeyCode.Invalid || button > VirtualKeyCode.Max) throw new ArgumentOutOfRangeException(nameof(button));
+            if (state < KeyState.None || state > KeyState.Pressed) throw new ArgumentOutOfRangeException(nameof(state));
+
+            if (state == KeyState.Pressed) state = KeyState.Down;
+
+            var threadLock = new object();
+
+            MouseEventAsync += localEventHandler;
+
+            bool result = false;
+
+            Monitor.Enter(threadLock);
+
+            if (timeout < 0)
+            {
+                Monitor.Wait(threadLock);
+                result = true;
+            }
+            else
+            {
+                result = Monitor.Wait(threadLock, timeout);
+            }
+
+            Monitor.Exit(threadLock);
+
+            MouseEventAsync -= localEventHandler;
+
+            return result;
+
+            void localEventHandler(object sender, MouseHookEventArgs e)
+            {
+                if (e.Button != button) return;
+                if (state != e.State && state != KeyState.None) return;
+                if (e.X != x || e.Y != y) return;
+
+                if (!Monitor.TryEnter(threadLock)) return;
+
+                Monitor.PulseAll(threadLock);
+                Monitor.Exit(threadLock);
+            }
+        }
+
+        public bool WaitForEvent(int x, int y, int timeout = -1)
+        {
+            var threadLock = new object();
+
+            MouseEventAsync += localEventHandler;
+
+            bool result = false;
+
+            Monitor.Enter(threadLock);
+
+            if (timeout < 0)
+            {
+                Monitor.Wait(threadLock);
+                result = true;
+            }
+            else
+            {
+                result = Monitor.Wait(threadLock, timeout);
+            }
+
+            Monitor.Exit(threadLock);
+
+            MouseEventAsync -= localEventHandler;
+
+            return result;
+
+            void localEventHandler(object sender, MouseHookEventArgs e)
+            {
+                if (e.X != x || e.Y != y) return;
+
+                if (!Monitor.TryEnter(threadLock)) return;
+
+                Monitor.PulseAll(threadLock);
+                Monitor.Exit(threadLock);
+            }
+        }
+
+        public void RegisterMouseEvent(VirtualKeyCode button, EventHandler<MouseHookEventArgs> eventHandler)
+        {
+            if (button < VirtualKeyCode.Invalid || button > VirtualKeyCode.Max) throw new ArgumentOutOfRangeException(nameof(button));
+            if (eventHandler == null) throw new ArgumentNullException(nameof(eventHandler));
+
+            lock (_lock)
+            {
+                if (!_registeredMouseEvents.ContainsKey(button)) _registeredMouseEvents.Add(button, new List<EventHandler<MouseHookEventArgs>>());
+
+                _registeredMouseEvents[button].Add(eventHandler);
+            }
+        }
+
+        public bool UnregisterMouseEvent(VirtualKeyCode button, EventHandler<MouseHookEventArgs> eventHandler)
+        {
+            if (button < VirtualKeyCode.Invalid || button > VirtualKeyCode.Max) throw new ArgumentOutOfRangeException(nameof(button));
+            if (eventHandler == null) throw new ArgumentNullException(nameof(eventHandler));
+
+            lock (_lock)
+            {
+                if (!_registeredMouseEvents.ContainsKey(button)) return false;
+
+                return _registeredMouseEvents[button].Remove(eventHandler);
             }
         }
 

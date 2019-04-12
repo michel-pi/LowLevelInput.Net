@@ -17,8 +17,8 @@ namespace LowLevelInput.Hooks
         private volatile bool _capslockState;
         private volatile WindowsHook _hook;
 
-        private Dictionary<VirtualKeyCode, KeyState> _keyStates;
-        private Dictionary<VirtualKeyCode, List<EventHandler<KeyboardHookEventArgs>>> _registeredKeyboardEvents;
+        private readonly Dictionary<VirtualKeyCode, KeyState> _keyStates;
+        private readonly Dictionary<VirtualKeyCode, List<EventHandler<KeyboardHookEventArgs>>> _registeredKeyboardEvents;
 
         public bool IsInstalled => _hook == null ? false : _hook.IsInstalled;
         public bool ClearInjectedFlag { get => _clearInjectedFlag; set => _clearInjectedFlag = value; }
@@ -152,19 +152,7 @@ namespace LowLevelInput.Hooks
             var threadLock = new object();
             var key = VirtualKeyCode.Invalid;
 
-            EventHandler<KeyboardHookEventArgs> eventHandler = (object sender, KeyboardHookEventArgs e) =>
-            {
-                if (e.State != KeyState.Down) return;
-
-                key = e.Key;
-
-                if (!Monitor.TryEnter(threadLock)) return;
-
-                Monitor.PulseAll(threadLock);
-                Monitor.Exit(threadLock);
-            };
-
-            KeyboardEventAsync += eventHandler;
+            KeyboardEventAsync += localEventHandler;
 
             bool result = false;
 
@@ -182,7 +170,7 @@ namespace LowLevelInput.Hooks
 
             Monitor.Exit(threadLock);
 
-            KeyboardEventAsync -= eventHandler;
+            KeyboardEventAsync -= localEventHandler;
 
             if (result)
             {
@@ -191,6 +179,18 @@ namespace LowLevelInput.Hooks
             else
             {
                 return VirtualKeyCode.Invalid;
+            }
+
+            void localEventHandler(object sender, KeyboardHookEventArgs e)
+            {
+                if (e.State != KeyState.Down) return;
+
+                key = e.Key;
+
+                if (!Monitor.TryEnter(threadLock)) return;
+
+                Monitor.PulseAll(threadLock);
+                Monitor.Exit(threadLock);
             }
         }
 
@@ -203,18 +203,7 @@ namespace LowLevelInput.Hooks
 
             var threadLock = new object();
 
-            EventHandler<KeyboardHookEventArgs> eventHandler = (object sender, KeyboardHookEventArgs e) =>
-            {
-                if (e.Key != key) return;
-                if (state != e.State && state != KeyState.None) return;
-
-                if (!Monitor.TryEnter(threadLock)) return;
-
-                Monitor.PulseAll(threadLock);
-                Monitor.Exit(threadLock);
-            };
-
-            KeyboardEventAsync += eventHandler;
+            KeyboardEventAsync += localEventHandler;
 
             bool result = false;
 
@@ -232,9 +221,20 @@ namespace LowLevelInput.Hooks
 
             Monitor.Exit(threadLock);
 
-            KeyboardEventAsync -= eventHandler;
+            KeyboardEventAsync -= localEventHandler;
 
             return result;
+
+            void localEventHandler(object sender, KeyboardHookEventArgs e)
+            {
+                if (e.Key != key) return;
+                if (state != e.State && state != KeyState.None) return;
+
+                if (!Monitor.TryEnter(threadLock)) return;
+
+                Monitor.PulseAll(threadLock);
+                Monitor.Exit(threadLock);
+            }
         }
 
         public void RegisterKeyboardEvent(VirtualKeyCode key, EventHandler<KeyboardHookEventArgs> eventHandler)
