@@ -52,18 +52,16 @@ namespace LowLevelInput.Hooks
 
         public override bool Equals(object obj)
         {
-            var keyboard = obj as KeyboardHookEventArgs;
-
-            if (keyboard == null)
-            {
-                return false;
-            }
-            else
+            if (obj is KeyboardHookEventArgs keyboard)
             {
                 return keyboard.Key == Key
                     && keyboard.State == State
                     && keyboard.Capslock == Capslock
                     && keyboard.IsShiftKeyDown == IsShiftKeyDown;
+            }
+            else
+            {
+                return false;
             }
         }
 

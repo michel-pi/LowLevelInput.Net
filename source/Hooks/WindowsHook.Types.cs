@@ -25,17 +25,15 @@ namespace LowLevelInput.Hooks
 
         public override bool Equals(object obj)
         {
-            var args = obj as HookCalledEventArgs;
-            
-            if (args == null)
-            {
-                return false;
-            }
-            else
+            if (obj is HookCalledEventArgs args)
             {
                 return args.Code == Code
                     && args.LParam == LParam
                     && args.WParam == WParam;
+            }
+            else
+            {
+                return false;
             }
         }
 

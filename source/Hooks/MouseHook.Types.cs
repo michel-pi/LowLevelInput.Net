@@ -60,19 +60,17 @@ namespace LowLevelInput.Hooks
 
         public override bool Equals(object obj)
         {
-            var mouse = obj as MouseHookEventArgs;
-
-            if (mouse == null)
-            {
-                return false;
-            }
-            else
+            if (obj is MouseHookEventArgs mouse)
             {
                 return mouse.IsMouseMove == IsMouseMove
                     && mouse.X == X
                     && mouse.Y == Y
                     && mouse.Button == Button
                     && mouse.MouseWheelDelta == MouseWheelDelta;
+            }
+            else
+            {
+                return false;
             }
         }
 
